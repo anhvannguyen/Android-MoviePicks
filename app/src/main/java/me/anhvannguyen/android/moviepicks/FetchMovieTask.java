@@ -21,7 +21,7 @@ import java.net.URL;
 public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
-    private final String MOVIE_API_KEY = "API KEY HERE";
+    private final String MOVIE_API_KEY = MovieDbApiKey.getKey();
     private final String MOVIE_API_PARAM = "api_key";
     private final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
 
@@ -57,6 +57,12 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
+
+            int responseCode = urlConnection.getResponseCode();
+
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                return null;
+            }
 
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
