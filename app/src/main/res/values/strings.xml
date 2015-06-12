@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Movie Picks</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- themoviedb.org image size -->
+    <!-- Backdrop Image Size -->
+    <string name="image_backdrop_w300">w300</string>
+    <string name="image_backdrop_w780">w780</string>
+    <string name="image_backdrop_w1280">w1280</string>
+    <string name="image_backdrop_original">original</string>
+    <!-- Poster Image Size -->
+    <string name="image_poster_w92">w92</string>
+    <string name="image_poster_w154">w154</string>
+    <string name="image_poster_w185">w185</string>
+    <string name="image_poster_w342">w342</string>
+    <string name="image_poster_w500">w500</string>
+    <string name="image_poster_w780">w780</string>
+    <string name="image_poster_original">original</string>
+
+
+    <!-- Menu Item Strings -->
+    <string name="action_refresh">Refresh</string>
+
+    <!-- MainActivityFragment String Resources -->
+    <string name="search_edittext_hint">Find Movie</string>
+</resources>
