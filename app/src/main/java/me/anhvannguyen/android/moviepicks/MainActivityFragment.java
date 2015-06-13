@@ -21,6 +21,7 @@ import me.anhvannguyen.android.moviepicks.data.Movie;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
+    private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
 
     private EditText mSearchEditText;
     private ListView mMovieListView;
