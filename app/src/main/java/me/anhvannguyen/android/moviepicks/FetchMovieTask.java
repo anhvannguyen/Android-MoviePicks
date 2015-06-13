@@ -14,11 +14,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+
+import me.anhvannguyen.android.moviepicks.data.Movie;
 
 /**
  * Created by anhvannguyen on 6/11/15.
  */
-public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
+public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
     private final String MOVIE_API_KEY = MovieDbApiKey.getKey();
@@ -26,7 +29,7 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
     private final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
 
     @Override
-    protected String[] doInBackground(Void... params) {
+    protected Movie[] doInBackground(Void... params) {
 
         HttpURLConnection urlConnection = null;
         BufferedReader bufferedReader = null;
@@ -117,14 +120,17 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
     }
 
     @Override
-    protected void onPostExecute(String[] strings) {
-        if (strings != null) {
+    protected void onPostExecute(Movie[] movieList) {
+        if (movieList != null) {
             MainActivityFragment.mMovieAdapter.clear();
-            MainActivityFragment.mMovieAdapter.addAll(strings);
+            for (Movie movie : movieList) {
+                MainActivityFragment.mMovieAdapter.addAll(movie.getTitle());
+            }
+            //MainActivityFragment.mMovieAdapter.addAll(movieList.);
         }
     }
 
-    private String[] convertJson(String movieJsonStr) throws JSONException {
+    private Movie[] convertJson(String movieJsonStr) throws JSONException {
         // These are the names of the JSON objects that need to be extracted.
         final String MDB_RESULT = "results";
         final String MDB_ID = "id";                         // int
@@ -142,17 +148,40 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
 
         int movieArrayCount = movieArray.length();
 
-        String[] results = new String[movieArrayCount];
+        ArrayList<Movie> movieArrayList = new ArrayList<Movie>();
 
+        // Get the data from the JSON
         for (int i=0; i < movieArrayCount; i++) {
             JSONObject movieObject = movieArray.getJSONObject(i);
-            results[i] = movieObject.getString(MDB_TITLE);
+
+            int id = movieObject.getInt(MDB_ID);
+            String title = movieObject.getString(MDB_TITLE);
+            String releaseDate = movieObject.getString(MDB_RELEASE_DATE);
+            Double voteAverage = movieObject.getDouble(MDB_VOTE_AVERAGE);
+            int voteCount = movieObject.getInt(MDB_VOTE_COUNT);
+            Double popularity = movieObject.getDouble(MDB_POPULARITY);
+            String posterPath = movieObject.getString(MDB_POSTER_PATH);
+            String backdropPath = movieObject.getString(MDB_BACKDROP_PATH);
+
+            Movie tempMovie = new Movie(
+                    id,
+                    title,
+                    releaseDate,
+                    voteAverage,
+                    voteCount,
+                    popularity,
+                    posterPath,
+                    backdropPath
+            );
+            movieArrayList.add(tempMovie);
         }
 
-//        for (String s : results) {
-//            Log.v(LOG_TAG, "Movie Title: " + s);
-//        }
+        for (Movie s : movieArrayList) {
+            Log.v(LOG_TAG, "Movie: " + s.getId() + " - " + s.getTitle() + " - " + s.getVoteAverage()
+            + "(" + s.getVoteCount() + ")");
+        }
 
+        Movie[] results = movieArrayList.toArray(new Movie[movieArrayCount]);
         return results;
     }
 }
