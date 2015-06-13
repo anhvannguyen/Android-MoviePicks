@@ -91,7 +91,7 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
+            // If the code didn't successfully get the movie data, there's no point in attempting
             // to parse it.
             return null;
         } finally {
@@ -149,9 +149,9 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String[]> {
             results[i] = movieObject.getString(MDB_TITLE);
         }
 
-        for (String s : results) {
-            Log.v(LOG_TAG, "Movie Title: " + s);
-        }
+//        for (String s : results) {
+//            Log.v(LOG_TAG, "Movie Title: " + s);
+//        }
 
         return results;
     }
