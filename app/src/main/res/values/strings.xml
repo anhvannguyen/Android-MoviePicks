@@ -22,6 +22,15 @@
     <!-- Menu Item Strings -->
     <string name="action_refresh">Refresh</string>
 
+    <!-- Preference Sort Order Strings -->
+    <string name="pref_sortorder_key">sortorder_key</string>
+    <string name="pref_sortorder_label">Sort Order</string>
+    <string name="pref_sort_label_popular">Popularity</string>
+    <string name="pref_sort_label_rating">Rating</string>
+    <string name="pref_sort_value_popular">popularity.desc</string>
+    <string name="pref_sort_value_rating">vote_average.desc</string>
+
     <!-- MainActivityFragment String Resources -->
     <string name="search_edittext_hint">Find Movie</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 </resources>
