@@ -10,6 +10,7 @@ public class Movie {
 
     private int mId;
     private String mTitle;
+    private String mOriginalTitle;
     private String mReleaseDate;
     private double mVoteAverage;
     private int mVoteCount;
@@ -18,11 +19,11 @@ public class Movie {
     private String mBackdropPath;
     private boolean mFavorite;
 
-    public Movie(int id, String title, String releaseDate, double voteAverage, int voteCount,
-                 double popularity, String posterPath, String backdropPath) {
+    public Movie(int id, String title, String originalTitle, String releaseDate, double voteAverage,
+                 int voteCount, double popularity, String posterPath, String backdropPath) {
         mId = id;
         mTitle = title;
-
+        mOriginalTitle = originalTitle;
         mReleaseDate = releaseDate;
         mVoteAverage = voteAverage;
         mVoteCount = voteCount;
