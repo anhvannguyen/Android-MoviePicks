@@ -176,10 +176,10 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
             movieArrayList.add(tempMovie);
         }
 
-        for (Movie s : movieArrayList) {
-            Log.v(LOG_TAG, "Movie: " + s.getId() + " - " + s.getTitle() + " - " + s.getVoteAverage()
-            + "(" + s.getVoteCount() + ")");
-        }
+//        for (Movie s : movieArrayList) {
+//            Log.v(LOG_TAG, "Movie: " + s.getId() + " - " + s.getTitle() + " - " + s.getVoteAverage()
+//            + "(" + s.getVoteCount() + ")");
+//        }
 
         Movie[] results = movieArrayList.toArray(new Movie[movieArrayCount]);
         return results;
