@@ -87,6 +87,11 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         refreshMovieList();
     }
 
@@ -112,6 +117,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     public void refreshMovieList() {
-        new FetchMovieTask().execute();
+        String prefChoice = Utility.getSortingPreference(getActivity());
+        new FetchMovieTask().execute(prefChoice);
     }
 }

@@ -21,7 +21,7 @@ import me.anhvannguyen.android.moviepicks.data.Movie;
 /**
  * Created by anhvannguyen on 6/11/15.
  */
-public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
+public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
     private final String MOVIE_API_KEY = MovieDbApiKey.getKey();
@@ -29,7 +29,10 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
     private final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
 
     @Override
-    protected Movie[] doInBackground(Void... params) {
+    protected Movie[] doInBackground(String... params) {
+        if (params == null) {
+            return null;
+        }
 
         HttpURLConnection urlConnection = null;
         BufferedReader bufferedReader = null;
@@ -38,10 +41,12 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
 
         try {
             // Temp path/params
-            String REFERENCE_PATH = "discover";
-            String ITEM_CONTENT_PATH = "movie";
-            String SORT_PARAM = "sort_by";
-            String SORT_OPTION = "popularity.desc";
+            final String REFERENCE_PATH = "discover";
+            final String ITEM_CONTENT_PATH = "movie";
+            final String SORT_PARAM = "sort_by";
+            final String SORT_OPTION = params[0];
+            final String VOTECOUNT_PARAM = "vote_count.gte";
+            final int MIN_VOTE_COUNT = 100;
 
             // Build themoviedb.org URI
             Uri movieUri = Uri.parse(MOVIE_BASE_URL)
@@ -49,6 +54,7 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
                     .appendPath(REFERENCE_PATH)
                     .appendPath(ITEM_CONTENT_PATH)
                     .appendQueryParameter(SORT_PARAM, SORT_OPTION)
+                    .appendQueryParameter(VOTECOUNT_PARAM, Integer.toString(MIN_VOTE_COUNT))
                     .appendQueryParameter(MOVIE_API_PARAM, MOVIE_API_KEY)
                     .build();
 

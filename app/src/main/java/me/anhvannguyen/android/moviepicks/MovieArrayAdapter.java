@@ -49,7 +49,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         String posterPath = movie.getFullPosterPath(posterSize);
         Picasso.with(mContext)
                 .load(posterPath)
-                .error(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_launcher)        // TODO: Find better error/placeholder image
                 .into(viewHolder.mPosterImage);
 
         // Set the title textview
@@ -59,6 +59,9 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         // TODO: fix string formatting
         viewHolder.mRatingTextView.setText("Rating: " + movie.getVoteAverage() +
                 " (" + movie.getVoteCount() + ")");
+
+        // Set the date textview
+        viewHolder.mReleaseDateTextView.setText(movie.getReleaseDate());
         return view;
     }
 
@@ -68,11 +71,13 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         ImageView mPosterImage;
         TextView mTitleTextView;
         TextView mRatingTextView;
+        TextView mReleaseDateTextView;
 
         public ViewHolder(View view) {
             mPosterImage = (ImageView)view.findViewById(R.id.movie_list_poster_image);
             mTitleTextView = (TextView)view.findViewById(R.id.movie_list_title_textview);
             mRatingTextView = (TextView)view.findViewById(R.id.movie_list_rating_textview);
+            mReleaseDateTextView = (TextView)view.findViewById(R.id.movie_list_releasedate_textview);
         }
     }
 }
