@@ -28,7 +28,6 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         Movie movie = getItem(position);
 
         View view = convertView;
-
         ViewHolder viewHolder;
 
         // Check if an existing view is being reused, if not, inflate the view

@@ -8,8 +8,7 @@
     <ImageView
         android:id="@+id/movie_list_poster_image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"/>
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -23,15 +22,13 @@
             android:id="@+id/movie_list_title_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="300 - Rise of an Empire" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/movie_list_rating_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:text="9.2"/>
+            android:paddingTop="8dp" />
 
     </LinearLayout>
 

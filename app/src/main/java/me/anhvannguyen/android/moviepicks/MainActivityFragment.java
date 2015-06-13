@@ -46,15 +46,8 @@ public class MainActivityFragment extends Fragment {
                 "Godzilla"
         };
 
-        //List<String> movieList = new ArrayList<String>(Arrays.asList(fakeMovieList));
         List<Movie> movieList = new ArrayList<Movie>();
 
-//        mMovieAdapter = new ArrayAdapter<String>(
-//                getActivity(),
-//                R.layout.list_item_movie,
-//                R.id.movie_title_textview,
-//                movieList
-//        );
         mMovieAdapter = new MovieArrayAdapter(
                 getActivity(),
                 movieList
