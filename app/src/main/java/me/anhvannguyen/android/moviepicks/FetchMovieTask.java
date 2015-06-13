@@ -123,10 +123,7 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
     protected void onPostExecute(Movie[] movieList) {
         if (movieList != null) {
             MainActivityFragment.mMovieAdapter.clear();
-            for (Movie movie : movieList) {
-                MainActivityFragment.mMovieAdapter.addAll(movie.getTitle());
-            }
-            //MainActivityFragment.mMovieAdapter.addAll(movieList.);
+            MainActivityFragment.mMovieAdapter.addAll(movieList);
         }
     }
 

@@ -5,13 +5,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import me.anhvannguyen.android.moviepicks.data.Movie;
 
 
 /**
@@ -22,7 +22,7 @@ public class MainActivityFragment extends Fragment {
     private EditText mSearchEditText;
     private ListView mMovieListView;
 
-    protected static ArrayAdapter<String> mMovieAdapter;
+    protected static MovieArrayAdapter mMovieAdapter;
 
     public MainActivityFragment() {
     }
@@ -46,12 +46,17 @@ public class MainActivityFragment extends Fragment {
                 "Godzilla"
         };
 
-        List<String> movieList = new ArrayList<String>(Arrays.asList(fakeMovieList));
+        //List<String> movieList = new ArrayList<String>(Arrays.asList(fakeMovieList));
+        List<Movie> movieList = new ArrayList<Movie>();
 
-        mMovieAdapter = new ArrayAdapter<String>(
+//        mMovieAdapter = new ArrayAdapter<String>(
+//                getActivity(),
+//                R.layout.list_item_movie,
+//                R.id.movie_title_textview,
+//                movieList
+//        );
+        mMovieAdapter = new MovieArrayAdapter(
                 getActivity(),
-                R.layout.list_item_movie,
-                R.id.movie_title_textview,
                 movieList
         );
 

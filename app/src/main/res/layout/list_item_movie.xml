@@ -6,6 +6,7 @@
     android:minHeight="?android:attr/listPreferredItemHeight">
 
     <ImageView
+        android:id="@+id/movie_list_poster_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_launcher"/>
@@ -19,14 +20,14 @@
         android:layout_gravity="center_vertical">
 
         <TextView
-            android:id="@+id/movie_title_textview"
+            android:id="@+id/movie_list_title_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:text="300 - Rise of an Empire" />
 
         <TextView
-            android:id="@+id/movie_rating_textview"
+            android:id="@+id/movie_list_rating_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="8dp"
