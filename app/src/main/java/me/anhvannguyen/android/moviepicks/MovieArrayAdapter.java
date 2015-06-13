@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import me.anhvannguyen.android.moviepicks.data.Movie;
@@ -16,6 +18,8 @@ import me.anhvannguyen.android.moviepicks.data.Movie;
  * Created by anhvannguyen on 6/12/15.
  */
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
+    private final String LOG_TAG = MovieArrayAdapter.class.getSimpleName();
+
     Context mContext;
     public MovieArrayAdapter(Context context, List<Movie> objects) {
         super(context, R.layout.list_item_movie, objects);
@@ -41,10 +45,12 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         }
 
         // Poster image
-        String posterSize = mContext.getResources().getString(R.string.image_poster_w185);
+        String posterSize = mContext.getResources().getString(R.string.image_poster_w154);
         String posterPath = movie.getFullPosterPath(posterSize);
-        // TODO: set image for poster
-        viewHolder.mPosterImage.setImageResource(R.mipmap.ic_launcher);
+        Picasso.with(mContext)
+                .load(posterPath)
+                .error(R.mipmap.ic_launcher)
+                .into(viewHolder.mPosterImage);
 
         // Set the title textview
         viewHolder.mTitleTextView.setText(movie.getTitle());

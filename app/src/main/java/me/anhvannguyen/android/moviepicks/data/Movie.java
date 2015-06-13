@@ -1,12 +1,10 @@
 package me.anhvannguyen.android.moviepicks.data;
 
-import android.net.Uri;
-
 /**
  * Created by anhvannguyen on 6/12/15.
  */
 public class Movie {
-    private final String MOVIE_IMAGE_BASE_URL = "http://image.tmdb.org/t/p";
+    private final String MOVIE_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
 
     private int mId;
     private String mTitle;
@@ -107,18 +105,10 @@ public class Movie {
     }
 
     public String getFullPosterPath(String size) {
-        Uri posterPathUri = Uri.parse(MOVIE_IMAGE_BASE_URL).buildUpon()
-                .appendPath(size)
-                .appendPath(mPosterPath)
-                .build();
-        return posterPathUri.toString();
+        return MOVIE_IMAGE_BASE_URL + size + mPosterPath;
     }
 
     public String getFullBackdropPath(String size) {
-        Uri posterPathUri = Uri.parse(MOVIE_IMAGE_BASE_URL).buildUpon()
-                .appendPath(size)
-                .appendPath(mBackdropPath)
-                .build();
-        return posterPathUri.toString();
+        return MOVIE_IMAGE_BASE_URL + size + mBackdropPath;
     }
 }
