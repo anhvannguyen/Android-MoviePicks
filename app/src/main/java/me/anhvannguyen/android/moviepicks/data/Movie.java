@@ -48,6 +48,14 @@ public class Movie {
         mTitle = title;
     }
 
+    public String getOriginalTitle() {
+        return mOriginalTitle;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        mOriginalTitle = originalTitle;
+    }
+
     public String getReleaseDate() {
         return mReleaseDate;
     }
@@ -104,11 +112,17 @@ public class Movie {
         mFavorite = favorite;
     }
 
+
     public String getFullPosterPath(String size) {
         return MOVIE_IMAGE_BASE_URL + size + mPosterPath;
     }
 
     public String getFullBackdropPath(String size) {
         return MOVIE_IMAGE_BASE_URL + size + mBackdropPath;
+    }
+
+    @Override
+    public String toString() {
+        return mTitle + " - " + mVoteAverage + "(" + mVoteCount + ")";
     }
 }
