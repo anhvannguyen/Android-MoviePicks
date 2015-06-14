@@ -78,7 +78,7 @@ public class Movie implements Parcelable {
         mPopularity = parcel.readDouble();
         mPosterPath = parcel.readString();
         mBackdropPath = parcel.readString();
-        mFavorite = parcel.readInt() == 1;
+        mFavorite = parcel.readInt() != 0;
     }
 
 

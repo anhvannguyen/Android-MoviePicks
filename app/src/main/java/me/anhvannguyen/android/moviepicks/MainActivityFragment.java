@@ -1,5 +1,6 @@
 package me.anhvannguyen.android.moviepicks;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -86,7 +87,11 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Movie movie = (Movie)parent.getItemAtPosition(position);
-
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(DetailActivityFragment.EXTRA_MOVIE, movie);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
