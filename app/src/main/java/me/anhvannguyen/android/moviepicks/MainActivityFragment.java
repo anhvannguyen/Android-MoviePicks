@@ -81,6 +81,7 @@ public class MainActivityFragment extends Fragment {
 //        });
 
         mMovieListView = (ListView)rootView.findViewById(R.id.main_movie_listview);
+        mMovieListView.setEmptyView(rootView.findViewById(android.R.id.empty));
         mMovieListView.setAdapter(mMovieAdapter);
 
         mMovieListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

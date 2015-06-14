@@ -34,4 +34,7 @@
     <string name="search_edittext_hint">Find Movie</string>
     <string name="title_activity_detail">DetailActivity</string>
 
+    <!-- Empty ListView -->
+    <string name="empty_listview">No Movie Information Available</string>
+
 </resources>
