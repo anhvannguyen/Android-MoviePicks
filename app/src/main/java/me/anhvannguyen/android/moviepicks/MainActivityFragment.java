@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -80,6 +81,14 @@ public class MainActivityFragment extends Fragment {
 
         mMovieListView = (ListView)rootView.findViewById(R.id.main_movie_listview);
         mMovieListView.setAdapter(mMovieAdapter);
+
+        mMovieListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Movie movie = (Movie)parent.getItemAtPosition(position);
+
+            }
+        });
 
         return rootView;
     }
