@@ -3,6 +3,8 @@ package me.anhvannguyen.android.moviepicks.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Comparator;
+
 /**
  * Created by anhvannguyen on 6/12/15.
  */
@@ -170,6 +172,53 @@ public class Movie implements Parcelable {
 
     public String getFullBackdropPath(String size) {
         return MOVIE_IMAGE_BASE_URL + size + mBackdropPath;
+    }
+
+    public static class OrderByTitle implements Comparator<Movie> {
+        @Override
+        public int compare(Movie lhs, Movie rhs) {
+            return lhs.getTitle().compareTo(rhs.getTitle());
+        }
+    }
+
+    public static class OrderByDate implements Comparator<Movie> {
+        @Override
+        public int compare(Movie lhs, Movie rhs) {
+            return lhs.getReleaseDate().compareTo(rhs.getReleaseDate());
+        }
+    }
+
+    public static class OrderByRating implements Comparator<Movie> {
+        @Override
+        public int compare(Movie lhs, Movie rhs) {
+            if (lhs.getVoteAverage() < rhs.getVoteAverage()) {
+                return -1;
+            } else if (lhs.getVoteAverage() > rhs.getVoteAverage()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    public static class OrderByVoteCount implements Comparator<Movie> {
+        @Override
+        public int compare(Movie lhs, Movie rhs) {
+            return lhs.getVoteCount() - rhs.getVoteCount();
+        }
+    }
+
+    public static class OrderByPopularity implements Comparator<Movie> {
+        @Override
+        public int compare(Movie lhs, Movie rhs) {
+            if (lhs.getPopularity() < rhs.getPopularity()) {
+                return -1;
+            } else if (lhs.getPopularity() > rhs.getPopularity()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 
     @Override
