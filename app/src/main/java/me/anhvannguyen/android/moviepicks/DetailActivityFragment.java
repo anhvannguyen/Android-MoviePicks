@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -20,6 +21,7 @@ public class DetailActivityFragment extends Fragment {
     private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
     public static final String EXTRA_MOVIE = "movie_detail";
+    private final float MAX_RATING = 10.0f;
 
     private TextView mIdTextView;
     private TextView mTitleTextView;
@@ -27,6 +29,7 @@ public class DetailActivityFragment extends Fragment {
     private TextView mOverviewTextView;
     private TextView mReleaseDateTextView;
     private TextView mVoteAverageTextView;
+    private RatingBar mRatingBar;
     private TextView mVoteCountTextView;
     private TextView mPopularityTextView;
     private ImageView mBackdropImage;
@@ -46,6 +49,7 @@ public class DetailActivityFragment extends Fragment {
         mOverviewTextView = (TextView)rootView.findViewById(R.id.detail_overview_textview);
         mReleaseDateTextView = (TextView)rootView.findViewById(R.id.detail_release_date_textview);
         mVoteAverageTextView = (TextView)rootView.findViewById(R.id.detail_vote_average_textview);
+        mRatingBar = (RatingBar)rootView.findViewById(R.id.detail_rating_bar);
         mVoteCountTextView = (TextView)rootView.findViewById(R.id.detail_vote_count_textview);
         mPopularityTextView = (TextView)rootView.findViewById(R.id.detail_popuarity_textview);
         mBackdropImage = (ImageView)rootView.findViewById(R.id.detail_backdrop_imageview);
@@ -59,6 +63,7 @@ public class DetailActivityFragment extends Fragment {
         mOverviewTextView.setText("Overview: " + movie.getOverview());
         mReleaseDateTextView.setText("Released: " + movie.getReleaseDate());
         mVoteAverageTextView.setText("Rating: " + movie.getVoteAverage());
+        mRatingBar.setRating((float)(movie.getVoteAverage() / (MAX_RATING / mRatingBar.getNumStars())));
         mVoteCountTextView.setText("Vote Count: " + movie.getVoteCount());
         mPopularityTextView.setText("Popularity: " + movie.getPopularity());
 
