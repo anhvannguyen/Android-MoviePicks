@@ -139,6 +139,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
         final String MDB_ID = "id";                         // int
         final String MDB_TITLE = "title";                   // String
         final String MDB_ORIGINAL_TITLE = "original_title"; // String
+        final String MDB_OVERVIEW = "overview";             // String
         final String MDB_RELEASE_DATE = "release_date";     // String
         final String MDB_VOTE_AVERAGE = "vote_average";     // float
         final String MDB_VOTE_COUNT = "vote_count";         // int
@@ -160,6 +161,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             int id = movieObject.getInt(MDB_ID);
             String title = movieObject.getString(MDB_TITLE);
             String originalTitle = movieObject.getString(MDB_ORIGINAL_TITLE);
+            String overview = movieObject.getString(MDB_OVERVIEW);
             String releaseDate = movieObject.getString(MDB_RELEASE_DATE);
             Double voteAverage = movieObject.getDouble(MDB_VOTE_AVERAGE);
             int voteCount = movieObject.getInt(MDB_VOTE_COUNT);
@@ -171,6 +173,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                     id,
                     title,
                     originalTitle,
+                    overview,
                     releaseDate,
                     voteAverage,
                     voteCount,

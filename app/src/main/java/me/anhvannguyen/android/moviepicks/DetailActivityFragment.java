@@ -21,6 +21,7 @@ public class DetailActivityFragment extends Fragment {
     private TextView mIdTextView;
     private TextView mTitleTextView;
     private TextView mOriginalTitleTextView;
+    private TextView mOverviewTextView;
     private TextView mReleaseDateTextView;
     private TextView mVoteAverageTextView;
     private TextView mVoteCountTextView;
@@ -40,6 +41,7 @@ public class DetailActivityFragment extends Fragment {
         mIdTextView = (TextView)rootView.findViewById(R.id.detail_id_textview);
         mTitleTextView = (TextView)rootView.findViewById(R.id.detail_title_textview);
         mOriginalTitleTextView = (TextView)rootView.findViewById(R.id.detail_original_title_textview);
+        mOverviewTextView = (TextView)rootView.findViewById(R.id.detail_overview_textview);
         mReleaseDateTextView = (TextView)rootView.findViewById(R.id.detail_release_date_textview);
         mVoteAverageTextView = (TextView)rootView.findViewById(R.id.detail_vote_average_textview);
         mVoteCountTextView = (TextView)rootView.findViewById(R.id.detail_vote_count_textview);
@@ -53,6 +55,7 @@ public class DetailActivityFragment extends Fragment {
         mIdTextView.setText("ID: " + movie.getId());
         mTitleTextView.setText("Title: " + movie.getTitle());
         mOriginalTitleTextView.setText("Original Title: " + movie.getOriginalTitle());
+        mOverviewTextView.setText("Overview: " + movie.getOverview());
         mReleaseDateTextView.setText("Released:" + movie.getReleaseDate());
         mVoteAverageTextView.setText("Rating: " + movie.getVoteAverage());
         mVoteCountTextView.setText("Vote Count: " + movie.getVoteCount());

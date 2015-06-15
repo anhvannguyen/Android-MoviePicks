@@ -14,6 +14,7 @@ public class Movie implements Parcelable {
     private int mId;
     private String mTitle;
     private String mOriginalTitle;
+    private String mOverview;
     private String mReleaseDate;
     private double mVoteAverage;
     private int mVoteCount;
@@ -22,11 +23,12 @@ public class Movie implements Parcelable {
     private String mBackdropPath;
     private boolean mFavorite;
 
-    public Movie(int id, String title, String originalTitle, String releaseDate, double voteAverage,
-                 int voteCount, double popularity, String posterPath, String backdropPath) {
+    public Movie(int id, String title, String originalTitle, String overview, String releaseDate,
+                 double voteAverage, int voteCount, double popularity, String posterPath, String backdropPath) {
         mId = id;
         mTitle = title;
         mOriginalTitle = originalTitle;
+        mOverview = overview;
         mReleaseDate = releaseDate;
         mVoteAverage = voteAverage;
         mVoteCount = voteCount;
@@ -47,6 +49,7 @@ public class Movie implements Parcelable {
         dest.writeInt(mId);
         dest.writeString(mTitle);
         dest.writeString(mOriginalTitle);
+        dest.writeString(mOverview);
         dest.writeString(mReleaseDate);
         dest.writeDouble(mVoteAverage);
         dest.writeInt(mVoteCount);
@@ -74,6 +77,7 @@ public class Movie implements Parcelable {
         mId = parcel.readInt();
         mTitle = parcel.readString();
         mOriginalTitle = parcel.readString();
+        mOverview = parcel.readString();
         mReleaseDate = parcel.readString();
         mVoteAverage = parcel.readDouble();
         mVoteCount = parcel.readInt();
@@ -107,6 +111,14 @@ public class Movie implements Parcelable {
 
     public void setOriginalTitle(String originalTitle) {
         mOriginalTitle = originalTitle;
+    }
+
+    public String getOverview() {
+        return mOverview;
+    }
+
+    public void setOverview(String overview) {
+        mOverview = overview;
     }
 
     public String getReleaseDate() {
