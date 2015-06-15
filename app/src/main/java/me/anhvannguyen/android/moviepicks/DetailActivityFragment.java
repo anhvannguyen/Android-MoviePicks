@@ -5,7 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import me.anhvannguyen.android.moviepicks.data.Movie;
 
@@ -26,9 +29,8 @@ public class DetailActivityFragment extends Fragment {
     private TextView mVoteAverageTextView;
     private TextView mVoteCountTextView;
     private TextView mPopularityTextView;
-    private TextView mPosterPathTextView;
-    private TextView mBackdropPathTextView;
-    private TextView mFavoriteTextView;
+    private ImageView mBackdropImage;
+    private ImageView mPosterImage;
 
     public DetailActivityFragment() {
     }
@@ -46,9 +48,8 @@ public class DetailActivityFragment extends Fragment {
         mVoteAverageTextView = (TextView)rootView.findViewById(R.id.detail_vote_average_textview);
         mVoteCountTextView = (TextView)rootView.findViewById(R.id.detail_vote_count_textview);
         mPopularityTextView = (TextView)rootView.findViewById(R.id.detail_popuarity_textview);
-        mPosterPathTextView = (TextView)rootView.findViewById(R.id.detail_poster_path_textview);
-        mBackdropPathTextView = (TextView)rootView.findViewById(R.id.detail_backdrop_path_textview);
-        mFavoriteTextView = (TextView)rootView.findViewById(R.id.detail_favorite_textview);
+        mBackdropImage = (ImageView)rootView.findViewById(R.id.detail_backdrop_imageview);
+        mPosterImage = (ImageView)rootView.findViewById(R.id.detail_poster_imageview);
 
         Movie movie = getActivity().getIntent().getParcelableExtra(EXTRA_MOVIE);
 
@@ -56,13 +57,20 @@ public class DetailActivityFragment extends Fragment {
         mTitleTextView.setText("Title: " + movie.getTitle());
         mOriginalTitleTextView.setText("Original Title: " + movie.getOriginalTitle());
         mOverviewTextView.setText("Overview: " + movie.getOverview());
-        mReleaseDateTextView.setText("Released:" + movie.getReleaseDate());
+        mReleaseDateTextView.setText("Released: " + movie.getReleaseDate());
         mVoteAverageTextView.setText("Rating: " + movie.getVoteAverage());
         mVoteCountTextView.setText("Vote Count: " + movie.getVoteCount());
-        mPopularityTextView.setText("Popularity:" + movie.getPopularity());
-        mPosterPathTextView.setText("Poster Image: " + movie.getPosterPath());
-        mBackdropPathTextView.setText("Backdrop Image:" + movie.getBackdropPath());
-        mFavoriteTextView.setText("Favorite: " + movie.isFavorite());
+        mPopularityTextView.setText("Popularity: " + movie.getPopularity());
+
+        String backdropFullPath = movie.getFullBackdropPath(getString(R.string.image_backdrop_w780));
+        Picasso.with(getActivity())
+                .load(backdropFullPath)
+                .into(mBackdropImage);
+
+        String posterFullPath = movie.getFullPosterPath(getString(R.string.image_poster_w185));
+        Picasso.with(getActivity())
+                .load(posterFullPath)
+                .into(mPosterImage);
 
         return rootView;
     }
