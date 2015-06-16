@@ -1,5 +1,8 @@
 package me.anhvannguyen.android.moviepicks.data;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -7,8 +10,25 @@ import android.provider.BaseColumns;
  */
 public class MovieDbContract {
 
+    // Content provider URI
+    public static final String CONTENT_AUTHORITY = "me.anhvannguyen.android.moviepicks";
+
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+
+    public static final String PATH_MOVIES = "movies";
+
     /* Inner class that defines the table contents of the movies table */
     public static final class MovieEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIES;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIES;
+
+        // Database columns
         // Table name
         public static final String TABLE_NAME = "movies";
 
@@ -44,6 +64,11 @@ public class MovieDbContract {
 
         // if the movie is the user's favorite
         public static final String COLUMN_FAVORITE = "favorite";
+
+        // Uri for the movie
+        public static Uri buildMovieUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
 
     }
 }
