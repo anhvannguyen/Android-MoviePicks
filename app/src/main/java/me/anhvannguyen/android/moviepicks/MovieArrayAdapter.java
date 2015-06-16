@@ -44,10 +44,14 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
             viewHolder = (ViewHolder)view.getTag();
         }
 
+        // Set indicators to see the location of the image source
+        Picasso.with(mContext).setIndicatorsEnabled(true);
+
         // Poster image
         String posterSize = mContext.getResources().getString(R.string.image_poster_w154);
         String posterPath = movie.getFullPosterPath(posterSize);
         Picasso.with(mContext)
+                //.setIndicatorsEnabled(true)
                 .load(posterPath)
                 .error(R.mipmap.ic_launcher)        // TODO: Find better error/placeholder image
                 .into(viewHolder.mPosterImage);
