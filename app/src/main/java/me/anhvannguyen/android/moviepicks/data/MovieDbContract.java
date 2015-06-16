@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
  * Created by anhvannguyen on 6/15/15.
  */
 public class MovieDbContract {
-    
+
     /* Inner class that defines the table contents of the movies table */
     public static final class MovieEntry implements BaseColumns {
         // Table name
