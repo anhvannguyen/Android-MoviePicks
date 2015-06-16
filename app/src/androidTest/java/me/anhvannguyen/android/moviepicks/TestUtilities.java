@@ -44,6 +44,7 @@ public class TestUtilities extends AndroidTestCase {
         return testValue;
     }
 
+    // Mark movie as favorite for user
     public static ContentValues setFavorite() {
         ContentValues updateValue = new ContentValues();
         updateValue.put(MovieDbContract.MovieEntry.COLUMN_FAVORITE, 1);

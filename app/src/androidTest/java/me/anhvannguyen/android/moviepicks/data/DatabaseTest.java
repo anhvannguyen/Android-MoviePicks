@@ -28,6 +28,7 @@ public class DatabaseTest extends AndroidTestCase {
     }
 
     public void testDbEntry() {
+        // generate some data to insert
         ContentValues newValue = TestUtilities.createMovieTestValue();
 
         // test insert
@@ -76,11 +77,12 @@ public class DatabaseTest extends AndroidTestCase {
 
         // Check if favorite is updated to "true"
         assertTrue(updateCursor.moveToFirst());
-
+        // get the index of the favorite column, then use the index to get the value from the column
         int favoriteIndex = updateCursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_FAVORITE);
         boolean isFavorite = updateCursor.getInt(favoriteIndex) != 0;
         assertEquals("Error: Favorite column not updated", true, isFavorite);
 
+        // check to make sure there is only 1 item in the cursor
         assertFalse("Error: More than one record returned from database query", cursor.moveToNext());
 
         cursor.close();
