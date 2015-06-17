@@ -30,7 +30,8 @@ public class MovieContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        return false;
+        mOpenHelper = new MovieDbHelper(getContext());
+        return true;
     }
 
     @Override

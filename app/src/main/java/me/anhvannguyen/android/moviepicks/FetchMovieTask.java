@@ -212,14 +212,18 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH, backdropPath);
 
             cVVector.add(movieValues);
+//            mContext.getContentResolver().insert(
+//                    MovieDbContract.MovieEntry.CONTENT_URI,
+//                    movieValues
+//            );
         }
 
         // add to database
-//        if ( cVVector.size() > 0 ) {
-//            ContentValues[] contentValues = new ContentValues[cVVector.size()];
-//            cVVector.toArray(contentValues);
-//            mContext.getContentResolver().bulkInsert(MovieDbContract.MovieEntry.CONTENT_URI, contentValues);
-//        }
+        if ( cVVector.size() > 0 ) {
+            ContentValues[] contentValues = new ContentValues[cVVector.size()];
+            cVVector.toArray(contentValues);
+            mContext.getContentResolver().bulkInsert(MovieDbContract.MovieEntry.CONTENT_URI, contentValues);
+        }
 
 //        for (Movie s : movieArrayList) {
 //            Log.v(LOG_TAG, "Movie: " + s.getId() + " - " + s.getTitle() + " - " + s.getVoteAverage()
