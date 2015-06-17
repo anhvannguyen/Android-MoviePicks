@@ -213,6 +213,13 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             cVVector.add(movieValues);
         }
 
+        // add to database
+        if ( cVVector.size() > 0 ) {
+            ContentValues[] contentValues = new ContentValues[cVVector.size()];
+            cVVector.toArray(contentValues);
+            mContext.getContentResolver().bulkInsert(MovieDbContract.MovieEntry.CONTENT_URI, contentValues);
+        }
+
 //        for (Movie s : movieArrayList) {
 //            Log.v(LOG_TAG, "Movie: " + s.getId() + " - " + s.getTitle() + " - " + s.getVoteAverage()
 //            + "(" + s.getVoteCount() + ")");
