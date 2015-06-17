@@ -164,6 +164,7 @@ public class MovieContentProvider extends ContentProvider {
                             returnCount++;
                         }
                     }
+                    db.setTransactionSuccessful();
                 } finally {
                     db.endTransaction();
                 }
