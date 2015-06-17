@@ -34,6 +34,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="me.anhvannguyen.android.moviepicks.MainActivity" />
         </activity>
+        <provider
+            android:authorities="me.anhvannguyen.android.moviepicks"
+            android:name=".data.MovieContentProvider" />
     </application>
 
 </manifest>
