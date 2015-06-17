@@ -27,8 +27,8 @@
     <string name="pref_sortorder_label">Sort Order</string>
     <string name="pref_sort_label_popular">Popularity</string>
     <string name="pref_sort_label_rating">Rating</string>
-    <string name="pref_sort_value_popular">popularity.desc</string>
-    <string name="pref_sort_value_rating">vote_average.desc</string>
+    <string name="pref_sort_value_popular">1</string>
+    <string name="pref_sort_value_rating">2</string>
 
     <!-- MainActivityFragment String Resources -->
     <string name="search_edittext_hint">Find Movie</string>

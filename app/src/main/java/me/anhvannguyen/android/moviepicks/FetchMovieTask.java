@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Vector;
 
 import me.anhvannguyen.android.moviepicks.data.Movie;
@@ -26,7 +27,7 @@ import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 /**
  * Created by anhvannguyen on 6/11/15.
  */
-public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
+public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
     private final String MOVIE_API_KEY = MovieDbApiKey.getKey();
@@ -42,7 +43,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     }
 
     @Override
-    protected Movie[] doInBackground(String... params) {
+    protected Movie[] doInBackground(Void... params) {
         if (params == null) {
             return null;
         }
@@ -57,7 +58,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
             final String REFERENCE_PATH = "discover";
             final String ITEM_CONTENT_PATH = "movie";
             final String SORT_PARAM = "sort_by";
-            final String SORT_OPTION = params[0];
+            final String SORT_OPTION = "popularity.desc";
             final String VOTECOUNT_PARAM = "vote_count.gte";
             final int MIN_VOTE_COUNT = 100;
 
@@ -67,7 +68,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                     .appendPath(REFERENCE_PATH)
                     .appendPath(ITEM_CONTENT_PATH)
                     .appendQueryParameter(SORT_PARAM, SORT_OPTION)
-                    .appendQueryParameter(VOTECOUNT_PARAM, Integer.toString(MIN_VOTE_COUNT))
+                    //.appendQueryParameter(VOTECOUNT_PARAM, Integer.toString(MIN_VOTE_COUNT))
                     .appendQueryParameter(MOVIE_API_PARAM, MOVIE_API_KEY)
                     .build();
 
@@ -214,16 +215,25 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
         }
 
         // add to database
-        if ( cVVector.size() > 0 ) {
-            ContentValues[] contentValues = new ContentValues[cVVector.size()];
-            cVVector.toArray(contentValues);
-            mContext.getContentResolver().bulkInsert(MovieDbContract.MovieEntry.CONTENT_URI, contentValues);
-        }
+//        if ( cVVector.size() > 0 ) {
+//            ContentValues[] contentValues = new ContentValues[cVVector.size()];
+//            cVVector.toArray(contentValues);
+//            mContext.getContentResolver().bulkInsert(MovieDbContract.MovieEntry.CONTENT_URI, contentValues);
+//        }
 
 //        for (Movie s : movieArrayList) {
 //            Log.v(LOG_TAG, "Movie: " + s.getId() + " - " + s.getTitle() + " - " + s.getVoteAverage()
 //            + "(" + s.getVoteCount() + ")");
 //        }
+        int prefChoice = Utility.getSortingPreference(mContext);
+        switch (prefChoice) {
+            case Movie.SORT_POPULARITY:
+                Collections.sort(movieArrayList, new Movie.OrderByPopularity());
+                break;
+            case Movie.SORT_VOTE_AVERAGE:
+                Collections.sort(movieArrayList, new Movie.OrderByRating());
+                break;
+        }
 
         Movie[] results = movieArrayList.toArray(new Movie[movieArrayCount]);
         return results;

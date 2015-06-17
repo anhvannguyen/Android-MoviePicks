@@ -9,6 +9,9 @@ import java.util.Comparator;
  * Created by anhvannguyen on 6/12/15.
  */
 public class Movie implements Parcelable {
+    public static final int SORT_POPULARITY = 1;
+    public static final int SORT_VOTE_AVERAGE = 2;
+
     private final String MOVIE_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
 
     private int mId;
@@ -204,9 +207,9 @@ public class Movie implements Parcelable {
         @Override
         public int compare(Movie lhs, Movie rhs) {
             if (lhs.getVoteAverage() < rhs.getVoteAverage()) {
-                return -1;
-            } else if (lhs.getVoteAverage() > rhs.getVoteAverage()) {
                 return 1;
+            } else if (lhs.getVoteAverage() > rhs.getVoteAverage()) {
+                return -1;
             } else {
                 return 0;
             }
@@ -224,9 +227,9 @@ public class Movie implements Parcelable {
         @Override
         public int compare(Movie lhs, Movie rhs) {
             if (lhs.getPopularity() < rhs.getPopularity()) {
-                return -1;
-            } else if (lhs.getPopularity() > rhs.getPopularity()) {
                 return 1;
+            } else if (lhs.getPopularity() > rhs.getPopularity()) {
+                return -1;
             } else {
                 return 0;
             }

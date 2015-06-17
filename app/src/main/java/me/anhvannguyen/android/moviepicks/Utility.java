@@ -13,10 +13,10 @@ import java.util.Date;
  */
 public class Utility {
 
-    public static String getSortingPreference(Context context) {
+    public static int getSortingPreference(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(context.getString(R.string.pref_sortorder_key),
-                context.getString(R.string.pref_sort_value_popular));
+        return Integer.parseInt(prefs.getString(context.getString(R.string.pref_sortorder_key),
+                context.getString(R.string.pref_sort_value_popular)));
     }
 
     public static Date getDateFromString(String dateString) {

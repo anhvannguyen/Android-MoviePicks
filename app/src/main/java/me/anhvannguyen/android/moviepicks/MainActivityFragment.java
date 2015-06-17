@@ -118,7 +118,8 @@ public class MainActivityFragment extends Fragment {
     }
 
     public void refreshMovieList() {
-        String prefChoice = Utility.getSortingPreference(getActivity());
-        new FetchMovieTask(getActivity(), mMovieAdapter).execute(prefChoice);
+        int prefChoice = Utility.getSortingPreference(getActivity());
+        new FetchMovieTask(getActivity(), mMovieAdapter).execute();
+
     }
 }
