@@ -28,7 +28,7 @@ public class MainActivityFragment extends Fragment {
     private EditText mSearchEditText;
     private ListView mMovieListView;
 
-    protected static MovieArrayAdapter mMovieAdapter;
+    private MovieArrayAdapter mMovieAdapter;
 
     public MainActivityFragment() {
     }
@@ -43,20 +43,6 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        String[] fakeMovieList = {
-                "300 - Rise of an Empire",
-                "Jurassic World",
-                "The 11th Hour",
-                "Guardians of the Galaxy",
-                "Transformers: Age of Extinction",
-                "Maleficent",
-                "X-Men: Days of Future Past",
-                "Big Hero 6",
-                "Dawn of the Planet of the Apes",
-                "The Amazing Spider-Man 2",
-                "Godzilla"
-        };
 
         List<Movie> movieList = new ArrayList<Movie>();
 
@@ -133,6 +119,6 @@ public class MainActivityFragment extends Fragment {
 
     public void refreshMovieList() {
         String prefChoice = Utility.getSortingPreference(getActivity());
-        new FetchMovieTask().execute(prefChoice);
+        new FetchMovieTask(getActivity(), mMovieAdapter).execute(prefChoice);
     }
 }
