@@ -1,8 +1,11 @@
 package me.anhvannguyen.android.moviepicks;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,8 +18,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import me.anhvannguyen.android.moviepicks.data.Movie;
+import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 
 /**
  * Created by anhvannguyen on 6/11/15.
@@ -27,6 +32,14 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
     private final String MOVIE_API_KEY = MovieDbApiKey.getKey();
     private final String MOVIE_API_PARAM = "api_key";
     private final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
+
+    private Context mContext;
+    private ArrayAdapter<Movie> mMovieArrayAdapter;
+
+    public FetchMovieTask(Context context, ArrayAdapter<Movie> movieArrayAdapter) {
+        mContext = context;
+        mMovieArrayAdapter = movieArrayAdapter;
+    }
 
     @Override
     protected Movie[] doInBackground(String... params) {
@@ -127,9 +140,9 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
     @Override
     protected void onPostExecute(Movie[] movieList) {
-        if (movieList != null) {
-            MainActivityFragment.mMovieAdapter.clear();
-            MainActivityFragment.mMovieAdapter.addAll(movieList);
+        if (movieList != null  && mMovieArrayAdapter != null) {
+            mMovieArrayAdapter.clear();
+            mMovieArrayAdapter.addAll(movieList);
         }
     }
 
@@ -153,6 +166,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
         int movieArrayCount = movieArray.length();
 
         ArrayList<Movie> movieArrayList = new ArrayList<Movie>();
+        Vector<ContentValues> cVVector = new Vector<ContentValues>(movieArrayCount);
 
         // Get the data from the JSON
         for (int i=0; i < movieArrayCount; i++) {
@@ -182,6 +196,21 @@ public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
                     backdropPath
             );
             movieArrayList.add(tempMovie);
+
+            ContentValues movieValues = new ContentValues();
+
+            movieValues.put(MovieDbContract.MovieEntry._ID, id);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_TITLE, title);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE, originalTitle);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_OVERVIEW, overview);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_VOTE_COUNT, voteCount);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_POPULARITY, popularity);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH, posterPath);
+            movieValues.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH, backdropPath);
+
+            cVVector.add(movieValues);
         }
 
 //        for (Movie s : movieArrayList) {
