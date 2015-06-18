@@ -42,8 +42,8 @@ public class MovieContentProvider extends ContentProvider {
         switch (match) {
             case MOVIES:
                 return MovieDbContract.MovieEntry.CONTENT_TYPE;
-//            case MOVIES_WITH_ID:
-//                return MovieDbContract.MovieEntry.CONTENT_ITEM_TYPE;
+            case MOVIES_WITH_ID:
+                return MovieDbContract.MovieEntry.CONTENT_ITEM_TYPE;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -60,6 +60,18 @@ public class MovieContentProvider extends ContentProvider {
                         projection,
                         selection,
                         selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case MOVIES_WITH_ID:
+                String movieId = MovieDbContract.MovieEntry.getMovieId(uri);
+                returnCursor = mOpenHelper.getReadableDatabase().query(
+                        MovieDbContract.MovieEntry.TABLE_NAME,
+                        projection,
+                        MovieDbContract.MovieEntry._ID + " = ?",
+                        new String[]{movieId},
                         null,
                         null,
                         sortOrder
