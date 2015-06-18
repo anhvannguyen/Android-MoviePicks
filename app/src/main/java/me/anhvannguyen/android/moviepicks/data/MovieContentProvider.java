@@ -15,14 +15,14 @@ public class MovieContentProvider extends ContentProvider {
     private MovieDbHelper mOpenHelper;
 
     private static final int MOVIES = 100;
-    //private static final int MOVIES_WITH_ID = 101;
+    private static final int MOVIES_WITH_ID = 101;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieDbContract.CONTENT_AUTHORITY;
 
         uriMatcher.addURI(authority, MovieDbContract.PATH_MOVIES, MOVIES);
-        //uriMatcher.addURI(authority, MovieDbContract.PATH_MOVIES + "/#", MOVIES_WITH_ID);
+        uriMatcher.addURI(authority, MovieDbContract.PATH_MOVIES + "/#", MOVIES_WITH_ID);
 
         return uriMatcher;
 
@@ -42,6 +42,8 @@ public class MovieContentProvider extends ContentProvider {
         switch (match) {
             case MOVIES:
                 return MovieDbContract.MovieEntry.CONTENT_TYPE;
+//            case MOVIES_WITH_ID:
+//                return MovieDbContract.MovieEntry.CONTENT_ITEM_TYPE;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -67,7 +69,7 @@ public class MovieContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        // notifiy content resolver that there is a change
+        // notify content resolver that there is a change
         returnCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return returnCursor;
     }
