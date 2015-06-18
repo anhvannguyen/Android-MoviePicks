@@ -164,7 +164,6 @@ public class MovieContentProvider extends ContentProvider {
     public int bulkInsert(Uri uri, ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
-        Uri returnUri;
         switch (match) {
             case MOVIES:
                 db.beginTransaction();
