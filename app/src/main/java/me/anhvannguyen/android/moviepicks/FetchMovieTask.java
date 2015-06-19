@@ -38,9 +38,6 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        if (params == null) {
-            return null;
-        }
 
         HttpURLConnection urlConnection = null;
         BufferedReader bufferedReader = null;
