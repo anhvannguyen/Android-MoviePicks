@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
  * Created by anhvannguyen on 6/18/15.
  */
 public class MovieCursorAdapter extends CursorAdapter {
+    private final String LOG_TAG = MovieCursorAdapter.class.getSimpleName();
 
 
     public MovieCursorAdapter(Context context, Cursor c, int flags) {
@@ -63,6 +64,7 @@ public class MovieCursorAdapter extends CursorAdapter {
         viewHolder.mReleaseDateTextView.setText(releaseDate);
     }
 
+    // Viewholder to cache the children view
     public static class ViewHolder {
         ImageView mPosterImage;
         TextView mTitleTextView;

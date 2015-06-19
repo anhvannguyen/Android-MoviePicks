@@ -111,12 +111,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                     startActivity(intent);
                 }
 
-//                Movie movie = (Movie)parent.getItemAtPosition(position);
-//                Intent intent = new Intent(getActivity(), DetailActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putParcelable(DetailActivityFragment.EXTRA_MOVIE, movie);
-//                intent.putExtras(bundle);
-//                startActivity(intent);
             }
         });
 
