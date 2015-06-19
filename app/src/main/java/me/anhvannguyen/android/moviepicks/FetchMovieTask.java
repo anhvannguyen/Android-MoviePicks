@@ -18,7 +18,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Vector;
 
 import me.anhvannguyen.android.moviepicks.data.Movie;
@@ -229,15 +228,15 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
 //            Log.v(LOG_TAG, "Movie: " + s.getId() + " - " + s.getTitle() + " - " + s.getVoteAverage()
 //            + "(" + s.getVoteCount() + ")");
 //        }
-        int prefChoice = Utility.getSortingPreference(mContext);
-        switch (prefChoice) {
-            case Movie.SORT_POPULARITY:
-                Collections.sort(movieArrayList, new Movie.OrderByPopularity());
-                break;
-            case Movie.SORT_VOTE_AVERAGE:
-                Collections.sort(movieArrayList, new Movie.OrderByRating());
-                break;
-        }
+//        int prefChoice = Utility.getSortingPreference(mContext);
+//        switch (prefChoice) {
+//            case Movie.SORT_POPULARITY:
+//                Collections.sort(movieArrayList, new Movie.OrderByPopularity());
+//                break;
+//            case Movie.SORT_VOTE_AVERAGE:
+//                Collections.sort(movieArrayList, new Movie.OrderByRating());
+//                break;
+//        }
 
         Movie[] results = movieArrayList.toArray(new Movie[movieArrayCount]);
         return results;

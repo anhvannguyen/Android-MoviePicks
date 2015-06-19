@@ -1,8 +1,12 @@
 package me.anhvannguyen.android.moviepicks;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,25 +14,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.anhvannguyen.android.moviepicks.data.Movie;
+import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private final String LOG_TAG = MainActivityFragment.class.getSimpleName();
 
-    private EditText mSearchEditText;
+    private static final int MOVIELIST_LOADER = 0;
+
+    //private EditText mSearchEditText;
     private ListView mMovieListView;
 
     private MovieArrayAdapter mMovieAdapter;
+    private MovieCursorAdapter mMovieCursorAdapter;
 
     public MainActivityFragment() {
     }
@@ -50,6 +57,11 @@ public class MainActivityFragment extends Fragment {
                 getActivity(),
                 movieList
         );
+        mMovieCursorAdapter = new MovieCursorAdapter(
+                getActivity(),
+                null,
+                0
+        );
 
 //        mSearchEditText = (EditText)rootView.findViewById(R.id.movie_search_edittext);
 //        mSearchEditText.setOnKeyListener(new View.OnKeyListener() {
@@ -68,7 +80,7 @@ public class MainActivityFragment extends Fragment {
 
         mMovieListView = (ListView)rootView.findViewById(R.id.main_movie_listview);
         mMovieListView.setEmptyView(rootView.findViewById(android.R.id.empty));
-        mMovieListView.setAdapter(mMovieAdapter);
+        mMovieListView.setAdapter(mMovieCursorAdapter);
 
         mMovieListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -93,7 +105,13 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        refreshMovieList();
+        getLoaderManager().restartLoader(MOVIELIST_LOADER, null, this);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(MOVIELIST_LOADER, null, this);
     }
 
     @Override
@@ -115,6 +133,45 @@ public class MainActivityFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        String sortOrder;
+
+        // Get the sort preference and set the sort order in the loader
+        int sortType = Utility.getSortingPreference(getActivity());
+        switch (sortType) {
+            case Movie.SORT_POPULARITY:
+                // descending by popularity
+                sortOrder = MovieDbContract.MovieEntry.COLUMN_POPULARITY + " DESC";
+                break;
+            case Movie.SORT_VOTE_AVERAGE:
+                // descending by rating
+                sortOrder = MovieDbContract.MovieEntry.COLUMN_VOTE_AVERAGE + " DESC";
+                break;
+            default:
+                sortOrder = null;
+        }
+
+        return new CursorLoader(
+                getActivity(),
+                MovieDbContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        mMovieCursorAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mMovieCursorAdapter.swapCursor(null);
     }
 
     public void refreshMovieList() {
