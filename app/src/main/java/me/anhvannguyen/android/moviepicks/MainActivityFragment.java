@@ -34,6 +34,28 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 //    private MovieArrayAdapter mMovieAdapter;
     private MovieCursorAdapter mMovieCursorAdapter;
 
+    private static final String[] MOVIELIST_PROJECTION = {
+            MovieDbContract.MovieEntry._ID,
+            MovieDbContract.MovieEntry.COLUMN_TITLE,
+            MovieDbContract.MovieEntry.COLUMN_ORIGINAL_TITLE,
+            MovieDbContract.MovieEntry.COLUMN_RELEASE_DATE,
+            MovieDbContract.MovieEntry.COLUMN_VOTE_AVERAGE,
+            MovieDbContract.MovieEntry.COLUMN_VOTE_COUNT,
+            MovieDbContract.MovieEntry.COLUMN_POPULARITY,
+            MovieDbContract.MovieEntry.COLUMN_POSTER_PATH,
+            MovieDbContract.MovieEntry.COLUMN_FAVORITE
+    };
+
+    public static final int COL_MOVIE_ID = 0;
+    public static final int COL_MOVIE_TITLE = 1;
+    public static final int COL_MOVIE_ORIGINAL_TITLE = 2;
+    public static final int COL_MOVIE_RELEASE_DATE = 3;
+    public static final int COL_MOVIE_VOTE_AVERAGE = 4;
+    public static final int COL_MOVIE_VOTE_COUNT = 5;
+    public static final int COL_MOVIE_POPULARITY = 6;
+    public static final int COL_MOVIE_POSTER_PATH = 7;
+    public static final int COL_MOVIE_FAVORITE = 8;
+
     public MainActivityFragment() {
     }
 
@@ -154,7 +176,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         return new CursorLoader(
                 getActivity(),
                 MovieDbContract.MovieEntry.CONTENT_URI,
-                null,
+                MOVIELIST_PROJECTION,
                 null,
                 null,
                 sortOrder

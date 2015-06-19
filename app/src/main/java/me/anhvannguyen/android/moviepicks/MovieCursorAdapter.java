@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
-
 /**
  * Created by anhvannguyen on 6/18/15.
  */
@@ -38,8 +36,7 @@ public class MovieCursorAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         // Get the url of the poster path
-        int posterIndex = cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_POSTER_PATH);
-        String posterPath = cursor.getString(posterIndex);
+        String posterPath = cursor.getString(MainActivityFragment.COL_MOVIE_POSTER_PATH);
         String fullPosterPath = Utility.getFullImagePath(
                 context.getString(R.string.image_poster_w154),
                 posterPath
@@ -52,20 +49,18 @@ public class MovieCursorAdapter extends CursorAdapter {
                 .into(viewHolder.mPosterImage);
 
         // Set the title textview
-        int titleIndex = cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_TITLE);
-        viewHolder.mTitleTextView.setText(cursor.getString(titleIndex));
+        String title = cursor.getString(MainActivityFragment.COL_MOVIE_TITLE);
+        viewHolder.mTitleTextView.setText(title);
 
         // Set the rating textview
-        int voteAverageIndex = cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_VOTE_AVERAGE);
-        int voteCountIndex = cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_VOTE_COUNT);
-        Double movieRating = cursor.getDouble(voteAverageIndex);
-        int movieVoteCount = cursor.getInt(voteCountIndex);
+        Double movieRating = cursor.getDouble(MainActivityFragment.COL_MOVIE_VOTE_AVERAGE);
+        int movieVoteCount = cursor.getInt(MainActivityFragment.COL_MOVIE_VOTE_COUNT);
         viewHolder.mRatingTextView.setText("Rating: " + movieRating +
                 " (" + movieVoteCount + ")");
 
         // Set the date textview
-        int releaseDateIndex = cursor.getColumnIndex(MovieDbContract.MovieEntry.COLUMN_RELEASE_DATE);
-        viewHolder.mReleaseDateTextView.setText(cursor.getString(releaseDateIndex));
+        String releaseDate = cursor.getString(MainActivityFragment.COL_MOVIE_RELEASE_DATE);
+        viewHolder.mReleaseDateTextView.setText(releaseDate);
     }
 
     public static class ViewHolder {
