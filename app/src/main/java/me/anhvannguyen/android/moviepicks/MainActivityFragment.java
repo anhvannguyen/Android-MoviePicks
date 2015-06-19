@@ -16,9 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.anhvannguyen.android.moviepicks.data.Movie;
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 
@@ -34,7 +31,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     //private EditText mSearchEditText;
     private ListView mMovieListView;
 
-    private MovieArrayAdapter mMovieAdapter;
+//    private MovieArrayAdapter mMovieAdapter;
     private MovieCursorAdapter mMovieCursorAdapter;
 
     public MainActivityFragment() {
@@ -51,12 +48,12 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        List<Movie> movieList = new ArrayList<Movie>();
-
-        mMovieAdapter = new MovieArrayAdapter(
-                getActivity(),
-                movieList
-        );
+//        List<Movie> movieList = new ArrayList<Movie>();
+//
+//        mMovieAdapter = new MovieArrayAdapter(
+//                getActivity(),
+//                movieList
+//        );
         mMovieCursorAdapter = new MovieCursorAdapter(
                 getActivity(),
                 null,
@@ -175,8 +172,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     public void refreshMovieList() {
-        int prefChoice = Utility.getSortingPreference(getActivity());
-        new FetchMovieTask(getActivity(), mMovieAdapter).execute();
+        new FetchMovieTask(getActivity()).execute();
 
     }
 }

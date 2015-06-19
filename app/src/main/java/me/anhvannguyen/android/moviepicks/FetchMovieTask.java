@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,16 +16,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Vector;
 
-import me.anhvannguyen.android.moviepicks.data.Movie;
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 
 /**
  * Created by anhvannguyen on 6/11/15.
  */
-public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
+public class FetchMovieTask extends AsyncTask<Void, Void, Void> {
     private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
     private final String MOVIE_API_KEY = MovieDbApiKey.getKey();
@@ -34,15 +31,13 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
     private final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
 
     private Context mContext;
-    private ArrayAdapter<Movie> mMovieArrayAdapter;
 
-    public FetchMovieTask(Context context, ArrayAdapter<Movie> movieArrayAdapter) {
+    public FetchMovieTask(Context context) {
         mContext = context;
-        mMovieArrayAdapter = movieArrayAdapter;
     }
 
     @Override
-    protected Movie[] doInBackground(Void... params) {
+    protected Void doInBackground(Void... params) {
         if (params == null) {
             return null;
         }
@@ -53,7 +48,7 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
         String movieJsonStr;
 
         try {
-            // Temp path/params
+            // themoviedb.org path/params
             final String REFERENCE_PATH = "discover";
             final String ITEM_CONTENT_PATH = "movie";
             final String SORT_PARAM = "sort_by";
@@ -129,7 +124,7 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
         }
 
         try {
-            return convertJson(movieJsonStr);
+            convertJson(movieJsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
@@ -138,15 +133,8 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
         return null;
     }
 
-    @Override
-    protected void onPostExecute(Movie[] movieList) {
-        if (movieList != null  && mMovieArrayAdapter != null) {
-            mMovieArrayAdapter.clear();
-            mMovieArrayAdapter.addAll(movieList);
-        }
-    }
 
-    private Movie[] convertJson(String movieJsonStr) throws JSONException {
+    private void convertJson(String movieJsonStr) throws JSONException {
         // These are the names of the JSON objects that need to be extracted.
         final String MDB_RESULT = "results";
         final String MDB_ID = "id";                         // int
@@ -165,7 +153,6 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
 
         int movieArrayCount = movieArray.length();
 
-        ArrayList<Movie> movieArrayList = new ArrayList<Movie>();
         Vector<ContentValues> cVVector = new Vector<ContentValues>(movieArrayCount);
 
         // Get the data from the JSON
@@ -183,20 +170,6 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
             String posterPath = movieObject.getString(MDB_POSTER_PATH);
             String backdropPath = movieObject.getString(MDB_BACKDROP_PATH);
 
-            Movie tempMovie = new Movie(
-                    id,
-                    title,
-                    originalTitle,
-                    overview,
-                    releaseDate,
-                    voteAverage,
-                    voteCount,
-                    popularity,
-                    posterPath,
-                    backdropPath
-            );
-            movieArrayList.add(tempMovie);
-
             ContentValues movieValues = new ContentValues();
 
             movieValues.put(MovieDbContract.MovieEntry._ID, id);
@@ -211,10 +184,6 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
             movieValues.put(MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH, backdropPath);
 
             cVVector.add(movieValues);
-//            mContext.getContentResolver().insert(
-//                    MovieDbContract.MovieEntry.CONTENT_URI,
-//                    movieValues
-//            );
         }
 
         // add to database
@@ -228,17 +197,8 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Movie[]> {
 //            Log.v(LOG_TAG, "Movie: " + s.getId() + " - " + s.getTitle() + " - " + s.getVoteAverage()
 //            + "(" + s.getVoteCount() + ")");
 //        }
-//        int prefChoice = Utility.getSortingPreference(mContext);
-//        switch (prefChoice) {
-//            case Movie.SORT_POPULARITY:
-//                Collections.sort(movieArrayList, new Movie.OrderByPopularity());
-//                break;
-//            case Movie.SORT_VOTE_AVERAGE:
-//                Collections.sort(movieArrayList, new Movie.OrderByRating());
-//                break;
-//        }
 
-        Movie[] results = movieArrayList.toArray(new Movie[movieArrayCount]);
-        return results;
+
+
     }
 }
