@@ -104,12 +104,19 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         mMovieListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Movie movie = (Movie)parent.getItemAtPosition(position);
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(DetailActivityFragment.EXTRA_MOVIE, movie);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                if (cursor != null) {
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                            .setData(MovieDbContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID)));
+                    startActivity(intent);
+                }
+
+//                Movie movie = (Movie)parent.getItemAtPosition(position);
+//                Intent intent = new Intent(getActivity(), DetailActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putParcelable(DetailActivityFragment.EXTRA_MOVIE, movie);
+//                intent.putExtras(bundle);
+//                startActivity(intent);
             }
         });
 
@@ -129,8 +136,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(MOVIELIST_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
