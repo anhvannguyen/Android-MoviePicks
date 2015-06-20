@@ -2,6 +2,7 @@ package me.anhvannguyen.android.moviepicks;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -67,6 +68,8 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     private ImageView mBackdropImage;
     private ImageView mPosterImage;
 
+    private Uri mUri;
+
     public DetailActivityFragment() {
     }
 
@@ -86,7 +89,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Intent intent = getActivity().getIntent();
-        if (intent == null) {
+        if (intent == null || intent.getData() == null) {
             return null;
         }
 
