@@ -1,7 +1,7 @@
 package me.anhvannguyen.android.moviepicks;
 
-import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -56,6 +56,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public static final int COL_MOVIE_POSTER_PATH = 7;
     public static final int COL_MOVIE_FAVORITE = 8;
 
+    // callback interface for host activity
+    public interface ItemSelectedCallback {
+        public void onItemSelected(Uri movieUri);
+    }
+
     public MainActivityFragment() {
     }
 
@@ -106,9 +111,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
                 if (cursor != null) {
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .setData(MovieDbContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID)));
-                    startActivity(intent);
+                    ((ItemSelectedCallback)getActivity()).onItemSelected(MovieDbContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID)));
+
+//                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+//                            .setData(MovieDbContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID)));
+//                    startActivity(intent);
                 }
 
             }

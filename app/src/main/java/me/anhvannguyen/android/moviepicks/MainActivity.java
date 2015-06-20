@@ -1,13 +1,14 @@
 package me.anhvannguyen.android.moviepicks;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements MainActivityFragment.ItemSelectedCallback {
     private boolean mTwoPane;
 
     @Override
@@ -28,6 +29,24 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    public void onItemSelected(Uri movieUri) {
+        if (mTwoPane) {
+            Bundle args = new Bundle();
+            args.putParcelable(DetailActivityFragment.DETAIL_URI, movieUri);
+
+            DetailActivityFragment fragment = new DetailActivityFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .setData(movieUri);
+            startActivity(intent);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

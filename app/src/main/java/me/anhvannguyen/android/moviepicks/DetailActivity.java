@@ -14,8 +14,14 @@ public class DetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_detail);
 
         if (savedInstanceState == null) {
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(DetailActivityFragment.DETAIL_URI, getIntent().getData());
+
+            DetailActivityFragment fragment = new DetailActivityFragment();
+            fragment.setArguments(arguments);
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.movie_detail_container, new DetailActivityFragment())
+                    .add(R.id.movie_detail_container, fragment)
                     .commit();
         }
     }
