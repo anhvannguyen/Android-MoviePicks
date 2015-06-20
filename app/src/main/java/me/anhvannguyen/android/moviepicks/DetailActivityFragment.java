@@ -89,6 +89,8 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         mBackdropImage = (ImageView)rootView.findViewById(R.id.detail_backdrop_imageview);
         mPosterImage = (ImageView)rootView.findViewById(R.id.detail_poster_imageview);
 
+        mRatingBar.setVisibility(View.INVISIBLE);
+
         Bundle arguments = getArguments();
         if (arguments != null) {
             mUri = arguments.getParcelable(DetailActivityFragment.DETAIL_URI);
@@ -124,49 +126,39 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
             return;
         }
 
-//        mIdTextView = (TextView)getView().findViewById(R.id.detail_id_textview);
         int id = cursor.getInt(COL_MOVIE_ID);
         mIdTextView.setText("ID: " + id);
 
-//        mTitleTextView = (TextView)getView().findViewById(R.id.detail_title_textview);
         String title = cursor.getString(COL_MOVIE_TITLE);
         mTitleTextView.setText("Title: " + title);
 
-//        mOriginalTitleTextView = (TextView) getView().findViewById(R.id.detail_original_title_textview);
         String originalTitle = cursor.getString(COL_MOVIE_ORIGINAL_TITLE);
         mOriginalTitleTextView.setText("Original Title: " + originalTitle);
 
-//        mOverviewTextView = (TextView) getView().findViewById(R.id.detail_overview_textview);
         String overview = cursor.getString(COL_MOVIE_OVERVIEW);
         mOverviewTextView.setText("Overview: " + overview);
 
-//        mReleaseDateTextView = (TextView) getView().findViewById(R.id.detail_release_date_textview);
         String releaseDate = cursor.getString(COL_MOVIE_RELEASE_DATE);
         mReleaseDateTextView.setText("Released: " + releaseDate);
 
-//        mVoteAverageTextView = (TextView) getView().findViewById(R.id.detail_vote_average_textview);
         Double voteAverage = cursor.getDouble(COL_MOVIE_VOTE_AVERAGE);
         mVoteAverageTextView.setText("Rating: " + voteAverage);
 
-//        mRatingBar = (RatingBar) getView().findViewById(R.id.detail_rating_bar);
+        mRatingBar.setVisibility(View.VISIBLE);
         mRatingBar.setRating((float) (voteAverage / (MAX_RATING / mRatingBar.getNumStars())));
 
-//        mVoteCountTextView = (TextView) getView().findViewById(R.id.detail_vote_count_textview);
         int voteCount = cursor.getInt(COL_MOVIE_VOTE_COUNT);
         mVoteCountTextView.setText("Vote Count: " + voteCount);
 
-//        mPopularityTextView = (TextView) getView().findViewById(R.id.detail_popuarity_textview);
         Double popularity = cursor.getDouble(COL_MOVIE_POPULARITY);
         mPopularityTextView.setText("Popularity: " + popularity);
 
-//        mBackdropImage = (ImageView) getView().findViewById(R.id.detail_backdrop_imageview);
         String backdropPath = cursor.getString(COL_MOVIE_BACKDROP_PATH);
         String backdropFullPath = Utility.getFullImagePath(getString(R.string.image_backdrop_w780), backdropPath);
         Picasso.with(getActivity())
                 .load(backdropFullPath)
                 .into(mBackdropImage);
 
-//        mPosterImage = (ImageView) getView().findViewById(R.id.detail_poster_imageview);
         String posterPath = cursor.getString(COL_MOVIE_POSTER_PATH);
         String posterFullPath = Utility.getFullImagePath(getString(R.string.image_poster_w185), posterPath);
         Picasso.with(getActivity())
