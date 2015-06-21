@@ -36,5 +36,6 @@
 
     <!-- Empty ListView -->
     <string name="empty_listview">No Movie Information Available</string>
+    <string name="empty_listview_network">No Movie Information Available.  No network connection detected.</string>
 
 </resources>

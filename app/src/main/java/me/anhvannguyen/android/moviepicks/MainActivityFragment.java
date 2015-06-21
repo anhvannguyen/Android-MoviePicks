@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import me.anhvannguyen.android.moviepicks.data.Movie;
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
@@ -30,6 +31,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     //private EditText mSearchEditText;
     private ListView mMovieListView;
+    private TextView mEmptyListText;
 
 //    private MovieArrayAdapter mMovieAdapter;
     private MovieCursorAdapter mMovieCursorAdapter;
@@ -74,6 +76,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        mEmptyListText = (TextView) rootView.findViewById(android.R.id.empty);
+        if (!Utility.isNetworkAvailable(getActivity())) {
+            mEmptyListText.setText(getString(R.string.empty_listview_network));
+        }
 
 //        List<Movie> movieList = new ArrayList<Movie>();
 //
