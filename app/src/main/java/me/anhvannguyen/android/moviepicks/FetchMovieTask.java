@@ -183,6 +183,12 @@ public class FetchMovieTask extends AsyncTask<Void, Void, Void> {
             cVVector.add(movieValues);
         }
 
+        // delete all item from movie database
+        mContext.getContentResolver().delete(
+                MovieDbContract.MovieEntry.CONTENT_URI,
+                null,
+                null
+        );
         // add to database
         if ( cVVector.size() > 0 ) {
             ContentValues[] contentValues = new ContentValues[cVVector.size()];
