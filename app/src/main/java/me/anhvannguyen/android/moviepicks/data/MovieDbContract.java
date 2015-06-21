@@ -65,9 +65,10 @@ public class MovieDbContract {
         // if the movie is the user's favorite
         public static final String COLUMN_FAVORITE = "favorite";
 
-        // get the id from the last path segment
+        // get the id from the uri
         public static String getMovieId(Uri uri) {
-            return uri.getLastPathSegment();
+            //return uri.getLastPathSegment();
+            return uri.getPathSegments().get(1);
         }
 
         // Uri for the movie
