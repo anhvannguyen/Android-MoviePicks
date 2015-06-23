@@ -16,6 +16,7 @@ public class MovieDbContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final String PATH_MOVIES = "movies";
+    public static final String PATH_TRAILERS = "trailers";
 
     /* Inner class that defines the table contents of the movies table */
     public static final class MovieEntry implements BaseColumns {
@@ -74,6 +75,58 @@ public class MovieDbContract {
         // Uri for the movie
         public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+    }
+
+    public static final class TrailerEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_TRAILERS).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TRAILERS;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TRAILERS;
+
+        // Table name
+        public static final String TABLE_NAME = "trailers";
+
+        // themoviedb.org movie ID
+        public static final String COLUMN_MDB_ID = "movie_id";
+
+        // themoviedb.org trailer ID
+        public static final String COLUMN_TRAILER_ID = "trailer_id";
+
+        // trailer key
+        public static final String COLUMN_KEY = "key";
+
+        // trailer name
+        public static final String COLUMN_NAME = "name";
+
+        // website where trailer is hosted
+        public static final String COLUMN_SITE = "site";
+
+        // type of video (Trailer/Featurette)
+        public static final String COLUMN_TYPE = "type";
+
+        public static String getMovieId(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
+
+        public static String getTrailerId(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
+
+        public static Uri buildMovieTrailerUri(String movieId, long trailerId) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(movieId)
+                    .appendPath(Long.toString(trailerId))
+                    .build();
+        }
+
+        public static Uri buildTrailerUri(long trailerId) {
+            return ContentUris.withAppendedId(CONTENT_URI, trailerId);
         }
 
     }
