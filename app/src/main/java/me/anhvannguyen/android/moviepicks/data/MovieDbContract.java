@@ -95,7 +95,7 @@ public class MovieDbContract {
         // themoviedb.org movie ID
         public static final String COLUMN_MDB_ID = "movie_id";
 
-        // themoviedb.org trailer ID
+        // themoviedb.org trailer ID (uuid)
         public static final String COLUMN_TRAILER_ID = "trailer_id";
 
         // trailer key
@@ -116,13 +116,6 @@ public class MovieDbContract {
 
         public static String getTrailerId(Uri uri) {
             return uri.getPathSegments().get(2);
-        }
-
-        public static Uri buildMovieTrailerUri(String movieId, long trailerId) {
-            return CONTENT_URI.buildUpon()
-                    .appendPath(movieId)
-                    .appendPath(Long.toString(trailerId))
-                    .build();
         }
 
         public static Uri buildTrailerUri(long trailerId) {
