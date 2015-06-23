@@ -29,8 +29,9 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
     private static final int MOVIE_DETAIL_LOADER = 0;
+    private static final int MOVIE_TRAILER_LOADER = 1;
     public static final String DETAIL_URI = "URI";
-    private final float MAX_RATING = 10.0f;
+
 
     private static final String[] MOVIEDETAIL_PROJECTION = {
             MovieDbContract.MovieEntry._ID,
@@ -131,64 +132,85 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        if (mUri != null) {
+        if (i == MOVIE_DETAIL_LOADER) {
+            if (mUri != null) {
 
-            return new CursorLoader(
-                    getActivity(),
-                    mUri,
-                    MOVIEDETAIL_PROJECTION,
-                    null,
-                    null,
-                    null
-            );
+                return new CursorLoader(
+                        getActivity(),
+                        mUri,
+                        MOVIEDETAIL_PROJECTION,
+                        null,
+                        null,
+                        null
+                );
+            }
+        } else if (i == MOVIE_TRAILER_LOADER) {
+            if (mUri != null) {
+                Uri trailerUri = MovieDbContract.TrailerEntry.buildMovieTrailerUri(mUri);
+
+                return new CursorLoader(
+                        getActivity(),
+                        trailerUri,
+                        null,
+                        null,
+                        null,
+                        null
+                );
+            }
         }
         return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (!cursor.moveToFirst()) {
-            return;
+        if (loader.getId() == MOVIE_DETAIL_LOADER) {
+            if (!cursor.moveToFirst()) {
+                return;
+            }
+
+            final float MAX_RATING = 10.0f;
+
+            int id = cursor.getInt(COL_MOVIE_ID);
+            mIdTextView.setText("ID: " + id);
+
+            String title = cursor.getString(COL_MOVIE_TITLE);
+            mTitleTextView.setText("Title: " + title);
+
+            String originalTitle = cursor.getString(COL_MOVIE_ORIGINAL_TITLE);
+            mOriginalTitleTextView.setText("Original Title: " + originalTitle);
+
+            String overview = cursor.getString(COL_MOVIE_OVERVIEW);
+            mOverviewTextView.setText("Overview: " + overview);
+
+            String releaseDate = cursor.getString(COL_MOVIE_RELEASE_DATE);
+            mReleaseDateTextView.setText("Released: " + releaseDate);
+
+            Double voteAverage = cursor.getDouble(COL_MOVIE_VOTE_AVERAGE);
+            mVoteAverageTextView.setText("Rating: " + voteAverage);
+
+            mRatingBar.setVisibility(View.VISIBLE);
+            mRatingBar.setRating((float) (voteAverage / (MAX_RATING / mRatingBar.getNumStars())));
+
+            int voteCount = cursor.getInt(COL_MOVIE_VOTE_COUNT);
+            mVoteCountTextView.setText("Vote Count: " + voteCount);
+
+            Double popularity = cursor.getDouble(COL_MOVIE_POPULARITY);
+            mPopularityTextView.setText("Popularity: " + popularity);
+
+            String backdropPath = cursor.getString(COL_MOVIE_BACKDROP_PATH);
+            String backdropFullPath = Utility.getFullImagePath(getString(R.string.image_backdrop_w780), backdropPath);
+            Picasso.with(getActivity())
+                    .load(backdropFullPath)
+                    .into(mBackdropImage);
+
+            String posterPath = cursor.getString(COL_MOVIE_POSTER_PATH);
+            String posterFullPath = Utility.getFullImagePath(getString(R.string.image_poster_w185), posterPath);
+            Picasso.with(getActivity())
+                    .load(posterFullPath)
+                    .into(mPosterImage);
+        } else if (loader.getId() == MOVIE_TRAILER_LOADER) {
+
         }
-
-        int id = cursor.getInt(COL_MOVIE_ID);
-        mIdTextView.setText("ID: " + id);
-
-        String title = cursor.getString(COL_MOVIE_TITLE);
-        mTitleTextView.setText("Title: " + title);
-
-        String originalTitle = cursor.getString(COL_MOVIE_ORIGINAL_TITLE);
-        mOriginalTitleTextView.setText("Original Title: " + originalTitle);
-
-        String overview = cursor.getString(COL_MOVIE_OVERVIEW);
-        mOverviewTextView.setText("Overview: " + overview);
-
-        String releaseDate = cursor.getString(COL_MOVIE_RELEASE_DATE);
-        mReleaseDateTextView.setText("Released: " + releaseDate);
-
-        Double voteAverage = cursor.getDouble(COL_MOVIE_VOTE_AVERAGE);
-        mVoteAverageTextView.setText("Rating: " + voteAverage);
-
-        mRatingBar.setVisibility(View.VISIBLE);
-        mRatingBar.setRating((float) (voteAverage / (MAX_RATING / mRatingBar.getNumStars())));
-
-        int voteCount = cursor.getInt(COL_MOVIE_VOTE_COUNT);
-        mVoteCountTextView.setText("Vote Count: " + voteCount);
-
-        Double popularity = cursor.getDouble(COL_MOVIE_POPULARITY);
-        mPopularityTextView.setText("Popularity: " + popularity);
-
-        String backdropPath = cursor.getString(COL_MOVIE_BACKDROP_PATH);
-        String backdropFullPath = Utility.getFullImagePath(getString(R.string.image_backdrop_w780), backdropPath);
-        Picasso.with(getActivity())
-                .load(backdropFullPath)
-                .into(mBackdropImage);
-
-        String posterPath = cursor.getString(COL_MOVIE_POSTER_PATH);
-        String posterFullPath = Utility.getFullImagePath(getString(R.string.image_poster_w185), posterPath);
-        Picasso.with(getActivity())
-                .load(posterFullPath)
-                .into(mPosterImage);
     }
 
     @Override
