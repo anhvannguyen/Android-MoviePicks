@@ -40,9 +40,9 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... params) {
 
-//        if (params == null) {
-//            return null;
-//        }
+        if (params == null) {
+            return null;
+        }
 
         HttpURLConnection urlConnection = null;
         BufferedReader bufferedReader = null;
@@ -98,7 +98,7 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
                 return null;
             }
             movieDetailJsonStr = buffer.toString();
-            Log.v(LOG_TAG, movieDetailJsonStr);
+            Log.d(LOG_TAG, movieDetailJsonStr);
 
 
         } catch (MalformedURLException e) {
@@ -117,12 +117,12 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
             }
         }
 
-        try {
-            convertJson(movieDetailJsonStr);
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-            e.printStackTrace();
-        }
+//        try {
+//            convertJson(movieDetailJsonStr);
+//        } catch (JSONException e) {
+//            Log.e(LOG_TAG, e.getMessage(), e);
+//            e.printStackTrace();
+//        }
 
         return null;
     }
