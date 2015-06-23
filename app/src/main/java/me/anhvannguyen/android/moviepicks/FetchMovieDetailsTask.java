@@ -98,8 +98,6 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
                 return null;
             }
             movieDetailJsonStr = buffer.toString();
-            Log.d(LOG_TAG, movieDetailJsonStr);
-
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -117,12 +115,12 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
             }
         }
 
-//        try {
-//            convertJson(movieDetailJsonStr);
-//        } catch (JSONException e) {
-//            Log.e(LOG_TAG, e.getMessage(), e);
-//            e.printStackTrace();
-//        }
+        try {
+            convertJson(movieDetailJsonStr);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
+        }
 
         return null;
     }
@@ -143,7 +141,7 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
         JSONObject trailerObject = new JSONObject(movieDetailJson);
         int movieId = trailerObject.getInt(MDB_MOVIE_ID);
 
-        JSONArray trailerArray = new JSONArray(MDB_RESULT);
+        JSONArray trailerArray = trailerObject.getJSONArray(MDB_RESULT);
         int trailerArrayCount = trailerArray.length();
 
         Vector<ContentValues> cVVector = new Vector<ContentValues>(trailerArrayCount);
