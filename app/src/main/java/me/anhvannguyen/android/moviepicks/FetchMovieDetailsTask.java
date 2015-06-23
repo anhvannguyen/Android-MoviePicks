@@ -1,8 +1,14 @@
 package me.anhvannguyen.android.moviepicks;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +17,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Vector;
+
+import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 
 /**
  * Created by anhvannguyen on 6/19/15.
@@ -21,6 +30,12 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
     private final String MOVIE_API_KEY = MovieDbApiKey.getKey();
     private final String MOVIE_API_PARAM = "api_key";
     private final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
+
+    private Context mContext;
+
+    public FetchMovieDetailsTask(Context context) {
+        mContext = context;
+    }
 
     @Override
     protected Void doInBackground(String... params) {
@@ -85,6 +100,7 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
             movieDetailJsonStr = buffer.toString();
             Log.v(LOG_TAG, movieDetailJsonStr);
 
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -101,6 +117,66 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
             }
         }
 
+        try {
+            convertJson(movieDetailJsonStr);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
+        }
+
         return null;
+    }
+
+    private void convertJson(String movieDetailJson) throws JSONException {
+        final String TRAILER_TYPE = "Trailer";
+        final String TRAILER_SITE = "YouTube";
+
+        // These are the names of the JSON objects that need to be extracted.
+        final String MDB_MOVIE_ID = "id";                   // int
+        final String MDB_RESULT = "results";                // result array
+        final String MDB_TRAILER_ID = "id";                 // uuid
+        final String MDB_KEY = "key";                       // String
+        final String MDB_NAME = "name";                     // String
+        final String MDB_SITE = "site";                     // String
+        final String MDB_TYPE = "type";                     // String
+
+        JSONObject trailerObject = new JSONObject(movieDetailJson);
+        int movieId = trailerObject.getInt(MDB_MOVIE_ID);
+
+        JSONArray trailerArray = new JSONArray(MDB_RESULT);
+        int trailerArrayCount = trailerArray.length();
+
+        Vector<ContentValues> cVVector = new Vector<ContentValues>(trailerArrayCount);
+
+        for (int i=0; i < trailerArrayCount; i++) {
+            JSONObject movieObject = trailerArray.getJSONObject(i);
+
+            String trailerID = movieObject.getString(MDB_TRAILER_ID);
+            String key = movieObject.getString(MDB_KEY);
+            String name = movieObject.getString(MDB_NAME);
+            String site = movieObject.getString(MDB_SITE);
+            String type = movieObject.getString(MDB_TYPE);
+
+            // Only adding Trailers from Youtube
+            if (site.equals(TRAILER_SITE) && type.equals(TRAILER_TYPE)) {
+                ContentValues trailerValue = new ContentValues();
+
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_MDB_ID, movieId);
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_TRAILER_ID, trailerID);
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_KEY, key);
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_NAME, name);
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_SITE, site);
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_TYPE, type);
+
+                cVVector.add(trailerValue);
+            }
+        }
+
+        // add to database
+        if ( cVVector.size() > 0 ) {
+            ContentValues[] contentValues = new ContentValues[cVVector.size()];
+            cVVector.toArray(contentValues);
+            mContext.getContentResolver().bulkInsert(MovieDbContract.TrailerEntry.CONTENT_URI, contentValues);
+        }
     }
 }
