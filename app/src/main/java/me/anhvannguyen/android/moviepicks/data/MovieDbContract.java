@@ -18,6 +18,8 @@ public class MovieDbContract {
     public static final String PATH_MOVIES = "movies";
     public static final String PATH_TRAILERS = "trailers";
 
+    public static final String PATH_DETAIL_TRAILER = "trailer";
+
     /* Inner class that defines the table contents of the movies table */
     public static final class MovieEntry implements BaseColumns {
 
@@ -68,7 +70,6 @@ public class MovieDbContract {
 
         // get the id from the uri
         public static String getMovieId(Uri uri) {
-            //return uri.getLastPathSegment();
             return uri.getPathSegments().get(1);
         }
 
@@ -110,16 +111,16 @@ public class MovieDbContract {
         // type of video (Trailer/Featurette)
         public static final String COLUMN_TYPE = "type";
 
-        public static String getMovieId(Uri uri) {
-            return uri.getPathSegments().get(1);
-        }
-
         public static String getTrailerId(Uri uri) {
-            return uri.getPathSegments().get(2);
+            return uri.getPathSegments().get(1);
         }
 
         public static Uri buildTrailerUri(long trailerId) {
             return ContentUris.withAppendedId(CONTENT_URI, trailerId);
+        }
+
+        public static Uri buildMovieTrailerUri(Uri uri) {
+            return uri.buildUpon().appendPath(PATH_DETAIL_TRAILER).build();
         }
 
     }

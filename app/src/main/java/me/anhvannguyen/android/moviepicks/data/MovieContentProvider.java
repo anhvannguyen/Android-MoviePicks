@@ -18,8 +18,8 @@ public class MovieContentProvider extends ContentProvider {
     private static final int MOVIES_WITH_ID = 101;
 
     private static final int TRAILERS = 200;
-    private static final int TRAILERS_WITH_MOVIEID = 201;
-    private static final int TRAILERS_WITH_MOVIEID_AND_TRAILERID = 202;
+    private static final int TRAILERS_WITH_ID = 201;
+    private static final int TRAILERS_WITH_MOVIEID = 202;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -29,8 +29,8 @@ public class MovieContentProvider extends ContentProvider {
         uriMatcher.addURI(authority, MovieDbContract.PATH_MOVIES + "/#", MOVIES_WITH_ID);
 
         uriMatcher.addURI(authority, MovieDbContract.PATH_TRAILERS, TRAILERS);
-        uriMatcher.addURI(authority, MovieDbContract.PATH_TRAILERS + "/#", TRAILERS_WITH_MOVIEID);
-        uriMatcher.addURI(authority, MovieDbContract.PATH_TRAILERS + "/#/#", TRAILERS_WITH_MOVIEID_AND_TRAILERID);
+        uriMatcher.addURI(authority, MovieDbContract.PATH_TRAILERS + "/#", TRAILERS_WITH_ID);
+        uriMatcher.addURI(authority, MovieDbContract.PATH_MOVIES + "/#/" + MovieDbContract.PATH_DETAIL_TRAILER, TRAILERS_WITH_MOVIEID);
 
         return uriMatcher;
 
@@ -54,10 +54,10 @@ public class MovieContentProvider extends ContentProvider {
                 return MovieDbContract.MovieEntry.CONTENT_ITEM_TYPE;
             case TRAILERS:
                 return MovieDbContract.TrailerEntry.CONTENT_TYPE;
+            case TRAILERS_WITH_ID:
+                return MovieDbContract.TrailerEntry.CONTENT_ITEM_TYPE;
             case TRAILERS_WITH_MOVIEID:
                 return MovieDbContract.TrailerEntry.CONTENT_TYPE;
-            case TRAILERS_WITH_MOVIEID_AND_TRAILERID:
-                return MovieDbContract.TrailerEntry.CONTENT_ITEM_TYPE;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -105,28 +105,26 @@ public class MovieContentProvider extends ContentProvider {
                 );
                 break;
             }
-            case TRAILERS_WITH_MOVIEID: {
-                String movieId = MovieDbContract.TrailerEntry.getMovieId(uri);
+            case TRAILERS_WITH_ID: {
+                String trailerId = MovieDbContract.TrailerEntry.getTrailerId(uri);
                 returnCursor = mOpenHelper.getReadableDatabase().query(
                         MovieDbContract.TrailerEntry.TABLE_NAME,
                         projection,
-                        MovieDbContract.TrailerEntry.COLUMN_MDB_ID + " = ?",
-                        new String[]{movieId},
+                        MovieDbContract.TrailerEntry._ID + " = ?",
+                        new String[]{trailerId},
                         null,
                         null,
                         sortOrder
                 );
                 break;
             }
-            case TRAILERS_WITH_MOVIEID_AND_TRAILERID: {
-                String movieId = MovieDbContract.TrailerEntry.getMovieId(uri);
-                String trailerId = MovieDbContract.TrailerEntry.getTrailerId(uri);
+            case TRAILERS_WITH_MOVIEID: {
+                String movieId = MovieDbContract.MovieEntry.getMovieId(uri);
                 returnCursor = mOpenHelper.getReadableDatabase().query(
                         MovieDbContract.TrailerEntry.TABLE_NAME,
                         projection,
-                        MovieDbContract.TrailerEntry.COLUMN_MDB_ID + " = ? AND " +
-                                MovieDbContract.TrailerEntry.COLUMN_MDB_ID + " = ?",
-                        new String[]{movieId, trailerId},
+                        MovieDbContract.TrailerEntry.COLUMN_MDB_ID + " = ?",
+                        new String[]{movieId},
                         null,
                         null,
                         sortOrder
