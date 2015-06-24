@@ -118,11 +118,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
                 if (cursor != null) {
-                    ((ItemSelectedCallback)getActivity()).onItemSelected(MovieDbContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID)));
-
-//                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-//                            .setData(MovieDbContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID)));
-//                    startActivity(intent);
+                    Uri movieUri = MovieDbContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID));
+                    String movieId = MovieDbContract.MovieEntry.getMovieId(movieUri);
+                    new FetchMovieDetailsTask(getActivity()).execute(movieId);
+                    ((ItemSelectedCallback)getActivity()).onItemSelected(movieUri);
                 }
 
             }
