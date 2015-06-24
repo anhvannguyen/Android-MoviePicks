@@ -22,9 +22,6 @@ import com.squareup.picasso.Picasso;
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class DetailActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
@@ -73,6 +70,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     private Uri mUri;
 
+
     public DetailActivityFragment() {
         setHasOptionsMenu(true);
     }
@@ -93,6 +91,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         mPopularityTextView = (TextView)rootView.findViewById(R.id.detail_popuarity_textview);
         mBackdropImage = (ImageView)rootView.findViewById(R.id.detail_backdrop_imageview);
         mPosterImage = (ImageView)rootView.findViewById(R.id.detail_poster_imageview);
+
 
         mRatingBar.setVisibility(View.INVISIBLE);
 
@@ -215,6 +214,8 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        if (loader.getId() == MOVIE_TRAILER_LOADER) {
 
+        }
     }
 }
