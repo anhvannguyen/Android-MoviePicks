@@ -13,7 +13,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -28,7 +30,6 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     private static final int MOVIE_DETAIL_LOADER = 0;
     private static final int MOVIE_TRAILER_LOADER = 1;
     public static final String DETAIL_URI = "URI";
-
 
     private static final String[] MOVIEDETAIL_PROJECTION = {
             MovieDbContract.MovieEntry._ID,
@@ -56,6 +57,14 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     public static final int COL_MOVIE_BACKDROP_PATH = 9;
     public static final int COL_MOVIE_FAVORITE = 10;
 
+    private static final String[] TRAILER_PROJECTION = {
+            MovieDbContract.TrailerEntry.COLUMN_NAME,
+            MovieDbContract.TrailerEntry.COLUMN_KEY
+    };
+
+    public static final int COL_TRAILER_NAME = 0;
+    public static final int COL_TRAILER_KEY = 1;
+
     private TextView mIdTextView;
     private TextView mTitleTextView;
     private TextView mOriginalTitleTextView;
@@ -67,6 +76,9 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     private TextView mPopularityTextView;
     private ImageView mBackdropImage;
     private ImageView mPosterImage;
+    private LinearLayout mTrailerContainer;
+
+    private Cursor mTrailerCursor;
 
     private Uri mUri;
 
@@ -80,6 +92,8 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
+
+
         mIdTextView = (TextView)rootView.findViewById(R.id.detail_id_textview);
         mTitleTextView = (TextView)rootView.findViewById(R.id.detail_title_textview);
         mOriginalTitleTextView = (TextView)rootView.findViewById(R.id.detail_original_title_textview);
@@ -91,6 +105,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         mPopularityTextView = (TextView)rootView.findViewById(R.id.detail_popuarity_textview);
         mBackdropImage = (ImageView)rootView.findViewById(R.id.detail_backdrop_imageview);
         mPosterImage = (ImageView)rootView.findViewById(R.id.detail_poster_imageview);
+        mTrailerContainer = (LinearLayout)rootView.findViewById(R.id.trailer_container);
 
 
         mRatingBar.setVisibility(View.INVISIBLE);
@@ -99,12 +114,32 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         if (arguments != null) {
             mUri = arguments.getParcelable(DetailActivityFragment.DETAIL_URI);
         }
+
+
         return rootView;
     }
+
+    private void loadTrailers(Cursor cursor) {
+        if (cursor == null || cursor.getCount() == 0) {
+            return;
+        }
+            while (cursor.moveToNext()) {
+                String trailerName = cursor.getString(COL_TRAILER_NAME);
+                String trailerKey = cursor.getString(COL_TRAILER_KEY);
+
+                Button trailerButton = new Button(getActivity());
+                trailerButton.setText(trailerName);
+                mTrailerContainer.addView(trailerButton);
+
+            }
+
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MOVIE_DETAIL_LOADER, null, this);
+        getLoaderManager().initLoader(MOVIE_TRAILER_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -150,7 +185,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
                 return new CursorLoader(
                         getActivity(),
                         trailerUri,
-                        null,
+                        TRAILER_PROJECTION,
                         null,
                         null,
                         null
@@ -208,14 +243,17 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
                     .load(posterFullPath)
                     .into(mPosterImage);
         } else if (loader.getId() == MOVIE_TRAILER_LOADER) {
-
+            if (cursor != null) {
+                mTrailerCursor = cursor;
+                loadTrailers(cursor);
+            }
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         if (loader.getId() == MOVIE_TRAILER_LOADER) {
-
+            mTrailerCursor = null;
         }
     }
 }
