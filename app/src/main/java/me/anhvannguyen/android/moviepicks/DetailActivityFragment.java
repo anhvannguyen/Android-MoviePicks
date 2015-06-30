@@ -22,11 +22,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 import me.anhvannguyen.android.moviepicks.data.Trailer;
 
 
-public class DetailActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class DetailActivityFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor>, FetchMovieDetailsTask.finishFetchCallback {
     private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
     private static final int MOVIE_DETAIL_LOADER = 0;
@@ -80,7 +83,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     private ImageView mPosterImage;
     private LinearLayout mTrailerContainer;
 
-    private Cursor mTrailerCursor;
+    private FetchMovieDetailsTask.finishFetchCallback mDelegate;
 
     private Uri mUri;
 
@@ -94,7 +97,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-
+        mDelegate = this;
 
         mIdTextView = (TextView)rootView.findViewById(R.id.detail_id_textview);
         mTitleTextView = (TextView)rootView.findViewById(R.id.detail_title_textview);
@@ -117,8 +120,33 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
             mUri = arguments.getParcelable(DetailActivityFragment.DETAIL_URI);
         }
 
-
+        if (mUri != null && savedInstanceState == null) {
+            String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
+            new FetchMovieDetailsTask(getActivity(), mDelegate).execute(movieId);
+        }
         return rootView;
+    }
+
+    @Override
+    public void processList(ArrayList<Trailer> trailers) {
+        if (trailers != null) {
+            for (final Trailer trailer : trailers) {
+                Button trailerButton = new Button(getActivity());
+                trailerButton.setText(trailer.getName());
+                trailerButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri youtubeUri = Uri.parse(Trailer.YOUTUBE_BASE_URL)
+                                .buildUpon()
+                                .appendPath(Trailer.YOUTUBE_WATCH_PATH)
+                                .appendQueryParameter(Trailer.VIDEO_PARAM, trailer.getKey())
+                                .build();
+                        startActivity(new Intent(Intent.ACTION_VIEW, youtubeUri));
+                    }
+                });
+                mTrailerContainer.addView(trailerButton);
+            }
+        }
     }
 
     private void loadTrailers(Cursor cursor) {
@@ -152,7 +180,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MOVIE_DETAIL_LOADER, null, this);
-        getLoaderManager().initLoader(MOVIE_TRAILER_LOADER, null, this);
+//        getLoaderManager().initLoader(MOVIE_TRAILER_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -171,7 +199,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         if (id == R.id.action_test) {
             if (mUri != null) {
                 String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
-                new FetchMovieDetailsTask(getActivity()).execute(movieId);
+                new FetchMovieDetailsTask(getActivity(), mDelegate).execute(movieId);
             }
         }
         return super.onOptionsItemSelected(item);
@@ -257,7 +285,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
                     .into(mPosterImage);
         } else if (loader.getId() == MOVIE_TRAILER_LOADER) {
             if (cursor != null) {
-                mTrailerCursor = cursor;
+//                mTrailerContainer.removeAllViews();
                 loadTrailers(cursor);
             }
         }
@@ -266,7 +294,6 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         if (loader.getId() == MOVIE_TRAILER_LOADER) {
-            mTrailerCursor = null;
         }
     }
 }

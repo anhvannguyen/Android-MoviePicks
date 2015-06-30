@@ -17,14 +17,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
+import me.anhvannguyen.android.moviepicks.data.Trailer;
 
 /**
  * Created by anhvannguyen on 6/19/15.
  */
-public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
+public class FetchMovieDetailsTask extends AsyncTask<String, Void, ArrayList<Trailer>> {
     private final String LOG_TAG = FetchMovieDetailsTask.class.getSimpleName();
 
     private final String MOVIE_API_KEY = MovieDbApiKey.getKey();
@@ -32,14 +34,19 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
     private final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
 
     private Context mContext;
+    public finishFetchCallback mListener;
 
-    public FetchMovieDetailsTask(Context context) {
+    public interface finishFetchCallback {
+        public void processList(ArrayList<Trailer> trailers);
+    }
+
+    public FetchMovieDetailsTask(Context context, finishFetchCallback callbackResponse) {
         mContext = context;
+        mListener = callbackResponse;
     }
 
     @Override
-    protected Void doInBackground(String... params) {
-
+    protected ArrayList<Trailer> doInBackground(String... params) {
         if (params == null) {
             return null;
         }
@@ -116,7 +123,7 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
         }
 
         try {
-            convertJson(movieDetailJsonStr);
+            return convertJson(movieDetailJsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
@@ -125,7 +132,14 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
         return null;
     }
 
-    private void convertJson(String movieDetailJson) throws JSONException {
+    @Override
+    protected void onPostExecute(ArrayList<Trailer> trailers) {
+        if (trailers != null) {
+            mListener.processList(trailers);
+        }
+    }
+
+    private ArrayList<Trailer> convertJson(String movieDetailJson) throws JSONException {
         final String TRAILER_TYPE = "Trailer";
         final String TRAILER_SITE = "YouTube";
 
@@ -145,6 +159,7 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
         int trailerArrayCount = trailerArray.length();
 
         Vector<ContentValues> cVVector = new Vector<ContentValues>(trailerArrayCount);
+        ArrayList<Trailer> trailerList = new ArrayList<Trailer>();
 
         for (int i=0; i < trailerArrayCount; i++) {
             JSONObject movieObject = trailerArray.getJSONObject(i);
@@ -167,6 +182,9 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
                 trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_TYPE, type);
 
                 cVVector.add(trailerValue);
+
+                Trailer newTrailer = new Trailer(movieId, trailerID, key, name, site, type);
+                trailerList.add(newTrailer);
             }
         }
 
@@ -176,5 +194,7 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
             cVVector.toArray(contentValues);
             mContext.getContentResolver().bulkInsert(MovieDbContract.TrailerEntry.CONTENT_URI, contentValues);
         }
+
+        return trailerList;
     }
 }
