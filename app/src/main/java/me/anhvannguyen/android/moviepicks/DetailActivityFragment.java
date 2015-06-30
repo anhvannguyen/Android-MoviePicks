@@ -1,5 +1,6 @@
 package me.anhvannguyen.android.moviepicks;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
+import me.anhvannguyen.android.moviepicks.data.Trailer;
 
 
 public class DetailActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
@@ -125,10 +127,21 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         }
             while (cursor.moveToNext()) {
                 String trailerName = cursor.getString(COL_TRAILER_NAME);
-                String trailerKey = cursor.getString(COL_TRAILER_KEY);
+                final String trailerKey = cursor.getString(COL_TRAILER_KEY);
 
                 Button trailerButton = new Button(getActivity());
                 trailerButton.setText(trailerName);
+                trailerButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri youtubeUri = Uri.parse(Trailer.YOUTUBE_BASE_URL)
+                                .buildUpon()
+                                .appendPath(Trailer.YOUTUBE_WATCH_PATH)
+                                .appendQueryParameter(Trailer.VIDEO_PARAM, trailerKey)
+                                .build();
+                        startActivity(new Intent(Intent.ACTION_VIEW, youtubeUri));
+                    }
+                });
                 mTrailerContainer.addView(trailerButton);
 
             }
