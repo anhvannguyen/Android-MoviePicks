@@ -87,7 +87,6 @@ public class DetailActivityFragment extends Fragment
 
     private Uri mUri;
 
-
     public DetailActivityFragment() {
         setHasOptionsMenu(true);
     }
@@ -120,6 +119,7 @@ public class DetailActivityFragment extends Fragment
             mUri = arguments.getParcelable(DetailActivityFragment.DETAIL_URI);
         }
 
+
         if (mUri != null && savedInstanceState == null) {
             String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
             new FetchMovieDetailsTask(getActivity(), mDelegate).execute(movieId);
@@ -147,6 +147,12 @@ public class DetailActivityFragment extends Fragment
                 mTrailerContainer.addView(trailerButton);
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        getLoaderManager().restartLoader(MOVIE_TRAILER_LOADER, null, this);
+        super.onResume();
     }
 
     private void loadTrailers(Cursor cursor) {
@@ -180,7 +186,7 @@ public class DetailActivityFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MOVIE_DETAIL_LOADER, null, this);
-//        getLoaderManager().initLoader(MOVIE_TRAILER_LOADER, null, this);
+        getLoaderManager().initLoader(MOVIE_TRAILER_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
