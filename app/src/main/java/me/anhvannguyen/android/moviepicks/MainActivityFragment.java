@@ -7,13 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,9 +33,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     //private EditText mSearchEditText;
     private ListView mMovieListView;
     private TextView mEmptyListText;
+    private RecyclerView mMovieRecyclerView;
 
 //    private MovieArrayAdapter mMovieAdapter;
     private MovieCursorAdapter mMovieCursorAdapter;
+    private MovieRecyclerAdapter mMovieRecyclerAdapter;
 
     private static final String[] MOVIELIST_PROJECTION = {
             MovieDbContract.MovieEntry._ID,
@@ -77,10 +80,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mEmptyListText = (TextView) rootView.findViewById(android.R.id.empty);
-        if (!Utility.isNetworkAvailable(getActivity())) {
-            mEmptyListText.setText(getString(R.string.empty_listview_network));
-        }
+//        mEmptyListText = (TextView) rootView.findViewById(android.R.id.empty);
+//        if (!Utility.isNetworkAvailable(getActivity())) {
+//            mEmptyListText.setText(getString(R.string.empty_listview_network));
+//        }
 
 //        List<Movie> movieList = new ArrayList<Movie>();
 //
@@ -93,6 +96,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 null,
                 0
         );
+        mMovieRecyclerAdapter = new MovieRecyclerAdapter(getActivity());
 
 //        mSearchEditText = (EditText)rootView.findViewById(R.id.movie_search_edittext);
 //        mSearchEditText.setOnKeyListener(new View.OnKeyListener() {
@@ -109,23 +113,31 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 //            }
 //        });
 
-        mMovieListView = (ListView)rootView.findViewById(R.id.main_movie_listview);
-        mMovieListView.setEmptyView(rootView.findViewById(android.R.id.empty));
-        mMovieListView.setAdapter(mMovieCursorAdapter);
+//        mMovieListView = (ListView)rootView.findViewById(R.id.main_movie_listview);
+//        mMovieListView.setEmptyView(rootView.findViewById(android.R.id.empty));
+//        mMovieListView.setAdapter(mMovieCursorAdapter);
+//
+//        mMovieListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+//                if (cursor != null) {
+//                    Uri movieUri = MovieDbContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID));
+//                    String movieId = MovieDbContract.MovieEntry.getMovieId(movieUri);
+//                    //new FetchMovieDetailsTask(getActivity()).execute(movieId);
+//                    ((ItemSelectedCallback)getActivity()).onItemSelected(movieUri);
+//                }
+//
+//            }
+//        });
 
-        mMovieListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                if (cursor != null) {
-                    Uri movieUri = MovieDbContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID));
-                    String movieId = MovieDbContract.MovieEntry.getMovieId(movieUri);
-                    //new FetchMovieDetailsTask(getActivity()).execute(movieId);
-                    ((ItemSelectedCallback)getActivity()).onItemSelected(movieUri);
-                }
+        mMovieRecyclerView = (RecyclerView) rootView.findViewById(R.id.main_movie_recyclerview);
+        // improve performance if the content of the layout
+        // does not change the size of the RecyclerView
+        mMovieRecyclerView.setHasFixedSize(true);
 
-            }
-        });
+        mMovieRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mMovieRecyclerView.setAdapter(mMovieRecyclerAdapter);
 
         return rootView;
     }
@@ -199,12 +211,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        mMovieCursorAdapter.swapCursor(cursor);
+//        mMovieCursorAdapter.swapCursor(cursor);
+        mMovieRecyclerAdapter.swapCursor(cursor);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mMovieCursorAdapter.swapCursor(null);
+//        mMovieCursorAdapter.swapCursor(null);
+        mMovieRecyclerAdapter.swapCursor(null);
     }
 
     public void refreshMovieList() {
