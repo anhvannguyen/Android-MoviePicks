@@ -149,12 +149,6 @@ public class DetailActivityFragment extends Fragment
         }
     }
 
-    @Override
-    public void onResume() {
-        getLoaderManager().restartLoader(MOVIE_TRAILER_LOADER, null, this);
-        super.onResume();
-    }
-
     private void loadTrailers(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) {
             return;
