@@ -15,8 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import me.anhvannguyen.android.moviepicks.data.Movie;
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
@@ -30,9 +28,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     private static final int MOVIELIST_LOADER = 0;
 
-    //private EditText mSearchEditText;
-    private ListView mMovieListView;
-    private TextView mEmptyListText;
+//    private EditText mSearchEditText;
+//    private ListView mMovieListView;
+//    private TextView mEmptyListText;
     private RecyclerView mMovieRecyclerView;
 
 //    private MovieArrayAdapter mMovieAdapter;
@@ -96,7 +94,15 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 null,
                 0
         );
-        mMovieRecyclerAdapter = new MovieRecyclerAdapter(getActivity());
+        mMovieRecyclerAdapter = new MovieRecyclerAdapter(getActivity(), new MovieRecyclerAdapter.MovieAdapterOnClickHandler() {
+            @Override
+            public void onClick(MovieRecyclerAdapter.ViewHolder viewHolder) {
+                if (mMovieRecyclerAdapter.getCursor() != null) {
+                    Uri movieUri = MovieDbContract.MovieEntry.buildMovieUri(mMovieRecyclerAdapter.getCursor().getLong(COL_MOVIE_ID));
+                    ((ItemSelectedCallback)getActivity()).onItemSelected(movieUri);
+                }
+            }
+        });
 
 //        mSearchEditText = (EditText)rootView.findViewById(R.id.movie_search_edittext);
 //        mSearchEditText.setOnKeyListener(new View.OnKeyListener() {

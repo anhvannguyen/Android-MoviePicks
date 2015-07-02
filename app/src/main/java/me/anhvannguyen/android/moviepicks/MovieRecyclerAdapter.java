@@ -18,8 +18,10 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
     private Cursor mCursor;
     private Context mContext;
+    private MovieAdapterOnClickHandler mClickHandler;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView mPosterImage;
         TextView mTitleTextView;
         TextView mRatingTextView;
@@ -31,11 +33,24 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
             mTitleTextView = (TextView) itemView.findViewById(R.id.movie_list_title_textview);
             mRatingTextView = (TextView) itemView.findViewById(R.id.movie_list_rating_textview);
             mReleaseDateTextView = (TextView) itemView.findViewById(R.id.movie_list_releasedate_textview);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            mCursor.moveToPosition(adapterPosition);
+            mClickHandler.onClick(this);
         }
     }
 
-    public MovieRecyclerAdapter(Context context) {
+    public static interface MovieAdapterOnClickHandler {
+        void onClick(ViewHolder viewHolder);
+    }
+
+    public MovieRecyclerAdapter(Context context, MovieAdapterOnClickHandler clickHandler) {
         mContext = context;
+        mClickHandler = clickHandler;
     }
 
     @Override
