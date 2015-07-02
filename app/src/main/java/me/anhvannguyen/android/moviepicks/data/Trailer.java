@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * Created by anhvannguyen on 6/29/15.
  */
-public class Trailer implements Comparator<Trailer>{
+public class Trailer {
     public static final String YOUTUBE_BASE_URL = "http://www.youtube.com/";
     public static final String YOUTUBE_WATCH_PATH = "watch";
     public static final String VIDEO_PARAM = "v";
@@ -74,8 +74,10 @@ public class Trailer implements Comparator<Trailer>{
         mType = type;
     }
 
-    @Override
-    public int compare(Trailer lhs, Trailer rhs) {
-        return lhs.getName().compareTo(rhs.getName());
+    public static class CompareName implements Comparator<Trailer> {
+        @Override
+        public int compare(Trailer lhs, Trailer rhs) {
+            return lhs.getName().compareTo(rhs.getName());
+        }
     }
 }
