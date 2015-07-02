@@ -186,7 +186,7 @@ public class DetailActivityFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MOVIE_DETAIL_LOADER, null, this);
-        getLoaderManager().initLoader(MOVIE_TRAILER_LOADER, null, this);
+//        getLoaderManager().initLoader(MOVIE_TRAILER_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
