@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Vector;
 
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
@@ -135,6 +136,7 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, ArrayList<Tra
     @Override
     protected void onPostExecute(ArrayList<Trailer> trailers) {
         if (trailers != null) {
+            Collections.sort(trailers, new Trailer.CompareName());
             mListener.processList(trailers);
         }
     }
