@@ -129,24 +129,25 @@ public class DetailActivityFragment extends Fragment
 
     @Override
     public void processList(ArrayList<Trailer> trailers) {
-        if (trailers != null) {
-            for (final Trailer trailer : trailers) {
-                Button trailerButton = new Button(getActivity());
-                trailerButton.setText(trailer.getName());
-                trailerButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Uri youtubeUri = Uri.parse(Trailer.YOUTUBE_BASE_URL)
-                                .buildUpon()
-                                .appendPath(Trailer.YOUTUBE_WATCH_PATH)
-                                .appendQueryParameter(Trailer.VIDEO_PARAM, trailer.getKey())
-                                .build();
-                        startActivity(new Intent(Intent.ACTION_VIEW, youtubeUri));
-                    }
-                });
-                mTrailerContainer.addView(trailerButton);
-            }
-        }
+//        if (trailers != null) {
+//            for (final Trailer trailer : trailers) {
+//                Button trailerButton = new Button(getActivity());
+//                trailerButton.setText(trailer.getName());
+//                trailerButton.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Uri youtubeUri = Uri.parse(Trailer.YOUTUBE_BASE_URL)
+//                                .buildUpon()
+//                                .appendPath(Trailer.YOUTUBE_WATCH_PATH)
+//                                .appendQueryParameter(Trailer.VIDEO_PARAM, trailer.getKey())
+//                                .build();
+//                        startActivity(new Intent(Intent.ACTION_VIEW, youtubeUri));
+//                    }
+//                });
+//                mTrailerContainer.addView(trailerButton);
+//            }
+//        }
+        getLoaderManager().restartLoader(MOVIE_TRAILER_LOADER, null, this);
     }
 
     private void loadTrailers(Cursor cursor) {
@@ -173,14 +174,12 @@ public class DetailActivityFragment extends Fragment
                 mTrailerContainer.addView(trailerButton);
 
             }
-
     }
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(MOVIE_DETAIL_LOADER, null, this);
-//        getLoaderManager().initLoader(MOVIE_TRAILER_LOADER, null, this);
+        getLoaderManager().initLoader(MOVIE_TRAILER_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -221,6 +220,7 @@ public class DetailActivityFragment extends Fragment
             }
         } else if (i == MOVIE_TRAILER_LOADER) {
             if (mUri != null) {
+                String sortOder = MovieDbContract.TrailerEntry.COLUMN_NAME + " ASC";
                 Uri trailerUri = MovieDbContract.TrailerEntry.buildMovieTrailerUri(mUri);
 
                 return new CursorLoader(
@@ -229,7 +229,7 @@ public class DetailActivityFragment extends Fragment
                         TRAILER_PROJECTION,
                         null,
                         null,
-                        null
+                        sortOder
                 );
             }
         }
