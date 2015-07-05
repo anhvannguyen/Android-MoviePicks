@@ -56,7 +56,7 @@ public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void> {
 
         try {
             final String MOVIE_PATH = "movie";
-            final String MOVIE_ID = params[0];  //"118340"; // Placeholder test
+            final String MOVIE_ID = params[0];
             final String MOVIE_TRAILERS = "videos";
             final String MOVIE_REVIEWS = "reviews";
 
