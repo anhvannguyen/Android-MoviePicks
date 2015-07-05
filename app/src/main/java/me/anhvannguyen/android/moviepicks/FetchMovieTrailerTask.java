@@ -24,8 +24,8 @@ import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 /**
  * Created by anhvannguyen on 6/19/15.
  */
-public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
-    private final String LOG_TAG = FetchMovieDetailsTask.class.getSimpleName();
+public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void> {
+    private final String LOG_TAG = FetchMovieTrailerTask.class.getSimpleName();
 
     private final String MOVIE_API_KEY = MovieDbApiKey.getKey();
     private final String MOVIE_API_PARAM = "api_key";
@@ -38,7 +38,7 @@ public class FetchMovieDetailsTask extends AsyncTask<String, Void, Void> {
         public void processTrailer();
     }
 
-    public FetchMovieDetailsTask(Context context, finishFetchCallback callbackResponse) {
+    public FetchMovieTrailerTask(Context context, finishFetchCallback callbackResponse) {
         mContext = context;
         mListener = callbackResponse;
     }

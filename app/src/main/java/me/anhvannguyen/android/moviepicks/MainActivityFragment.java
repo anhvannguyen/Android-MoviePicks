@@ -130,7 +130,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 //                if (cursor != null) {
 //                    Uri movieUri = MovieDbContract.MovieEntry.buildMovieUri(cursor.getLong(COL_MOVIE_ID));
 //                    String movieId = MovieDbContract.MovieEntry.getMovieId(movieUri);
-//                    //new FetchMovieDetailsTask(getActivity()).execute(movieId);
+//                    //new FetchMovieTrailerTask(getActivity()).execute(movieId);
 //                    ((ItemSelectedCallback)getActivity()).onItemSelected(movieUri);
 //                }
 //

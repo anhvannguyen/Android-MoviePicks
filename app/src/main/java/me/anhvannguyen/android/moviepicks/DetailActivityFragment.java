@@ -27,7 +27,7 @@ import me.anhvannguyen.android.moviepicks.data.Trailer;
 
 
 public class DetailActivityFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, FetchMovieDetailsTask.finishFetchCallback {
+        implements LoaderManager.LoaderCallbacks<Cursor>, FetchMovieTrailerTask.finishFetchCallback {
     private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
     private static final int MOVIE_DETAIL_LOADER = 0;
@@ -81,7 +81,7 @@ public class DetailActivityFragment extends Fragment
     private ImageView mPosterImage;
     private LinearLayout mTrailerContainer;
 
-    private FetchMovieDetailsTask.finishFetchCallback mDelegate;
+    private FetchMovieTrailerTask.finishFetchCallback mDelegate;
 
     private Uri mUri;
 
@@ -120,7 +120,7 @@ public class DetailActivityFragment extends Fragment
 
         if (mUri != null && savedInstanceState == null) {
             String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
-            new FetchMovieDetailsTask(getActivity(), mDelegate).execute(movieId);
+            new FetchMovieTrailerTask(getActivity(), mDelegate).execute(movieId);
         }
         return rootView;
     }
@@ -178,7 +178,7 @@ public class DetailActivityFragment extends Fragment
         if (id == R.id.action_test) {
             if (mUri != null) {
                 String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
-                new FetchMovieDetailsTask(getActivity(), mDelegate).execute(movieId);
+                new FetchMovieTrailerTask(getActivity(), mDelegate).execute(movieId);
             }
         }
         return super.onOptionsItemSelected(item);
