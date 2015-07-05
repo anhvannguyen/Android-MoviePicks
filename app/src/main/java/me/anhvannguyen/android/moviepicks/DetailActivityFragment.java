@@ -22,8 +22,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 import me.anhvannguyen.android.moviepicks.data.Trailer;
 
@@ -128,25 +126,7 @@ public class DetailActivityFragment extends Fragment
     }
 
     @Override
-    public void processList(ArrayList<Trailer> trailers) {
-//        if (trailers != null) {
-//            for (final Trailer trailer : trailers) {
-//                Button trailerButton = new Button(getActivity());
-//                trailerButton.setText(trailer.getName());
-//                trailerButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Uri youtubeUri = Uri.parse(Trailer.YOUTUBE_BASE_URL)
-//                                .buildUpon()
-//                                .appendPath(Trailer.YOUTUBE_WATCH_PATH)
-//                                .appendQueryParameter(Trailer.VIDEO_PARAM, trailer.getKey())
-//                                .build();
-//                        startActivity(new Intent(Intent.ACTION_VIEW, youtubeUri));
-//                    }
-//                });
-//                mTrailerContainer.addView(trailerButton);
-//            }
-//        }
+    public void processTrailer() {
         getLoaderManager().restartLoader(MOVIE_TRAILER_LOADER, null, this);
     }
 
@@ -285,7 +265,6 @@ public class DetailActivityFragment extends Fragment
                     .into(mPosterImage);
         } else if (loader.getId() == MOVIE_TRAILER_LOADER) {
             if (cursor != null) {
-//                mTrailerContainer.removeAllViews();
                 loadTrailers(cursor);
             }
         }
