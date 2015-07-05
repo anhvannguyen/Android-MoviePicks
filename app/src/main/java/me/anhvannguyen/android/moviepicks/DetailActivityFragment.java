@@ -96,18 +96,18 @@ public class DetailActivityFragment extends Fragment
 
         mDelegate = this;
 
-        mIdTextView = (TextView)rootView.findViewById(R.id.detail_id_textview);
-        mTitleTextView = (TextView)rootView.findViewById(R.id.detail_title_textview);
-        mOriginalTitleTextView = (TextView)rootView.findViewById(R.id.detail_original_title_textview);
-        mOverviewTextView = (TextView)rootView.findViewById(R.id.detail_overview_textview);
-        mReleaseDateTextView = (TextView)rootView.findViewById(R.id.detail_release_date_textview);
-        mVoteAverageTextView = (TextView)rootView.findViewById(R.id.detail_vote_average_textview);
-        mRatingBar = (RatingBar)rootView.findViewById(R.id.detail_rating_bar);
-        mVoteCountTextView = (TextView)rootView.findViewById(R.id.detail_vote_count_textview);
-        mPopularityTextView = (TextView)rootView.findViewById(R.id.detail_popuarity_textview);
-        mBackdropImage = (ImageView)rootView.findViewById(R.id.detail_backdrop_imageview);
-        mPosterImage = (ImageView)rootView.findViewById(R.id.detail_poster_imageview);
-        mTrailerContainer = (LinearLayout)rootView.findViewById(R.id.trailer_container);
+        mIdTextView = (TextView) rootView.findViewById(R.id.detail_id_textview);
+        mTitleTextView = (TextView) rootView.findViewById(R.id.detail_title_textview);
+        mOriginalTitleTextView = (TextView) rootView.findViewById(R.id.detail_original_title_textview);
+        mOverviewTextView = (TextView) rootView.findViewById(R.id.detail_overview_textview);
+        mReleaseDateTextView = (TextView) rootView.findViewById(R.id.detail_release_date_textview);
+        mVoteAverageTextView = (TextView) rootView.findViewById(R.id.detail_vote_average_textview);
+        mRatingBar = (RatingBar) rootView.findViewById(R.id.detail_rating_bar);
+        mVoteCountTextView = (TextView) rootView.findViewById(R.id.detail_vote_count_textview);
+        mPopularityTextView = (TextView) rootView.findViewById(R.id.detail_popuarity_textview);
+        mBackdropImage = (ImageView) rootView.findViewById(R.id.detail_backdrop_imageview);
+        mPosterImage = (ImageView) rootView.findViewById(R.id.detail_poster_imageview);
+        mTrailerContainer = (LinearLayout) rootView.findViewById(R.id.trailer_container);
 
 
         mRatingBar.setVisibility(View.INVISIBLE);
@@ -116,13 +116,16 @@ public class DetailActivityFragment extends Fragment
         if (arguments != null) {
             mUri = arguments.getParcelable(DetailActivityFragment.DETAIL_URI);
         }
+        
+        return rootView;
+    }
 
+    private void fetchTrailer() {
+        if (mUri != null && mTrailerContainer.getChildCount() == 0) {
 
-        if (mUri != null && savedInstanceState == null) {
             String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
             new FetchMovieTrailerTask(getActivity(), mDelegate).execute(movieId);
         }
-        return rootView;
     }
 
     @Override
@@ -134,26 +137,27 @@ public class DetailActivityFragment extends Fragment
         if (cursor == null || cursor.getCount() == 0) {
             return;
         }
-            while (cursor.moveToNext()) {
-                String trailerName = cursor.getString(COL_TRAILER_NAME);
-                final String trailerKey = cursor.getString(COL_TRAILER_KEY);
+//        mTrailerContainer.removeAllViews();
+        while (cursor.moveToNext()) {
+            String trailerName = cursor.getString(COL_TRAILER_NAME);
+            final String trailerKey = cursor.getString(COL_TRAILER_KEY);
 
-                Button trailerButton = new Button(getActivity());
-                trailerButton.setText(trailerName);
-                trailerButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Uri youtubeUri = Uri.parse(Trailer.YOUTUBE_BASE_URL)
-                                .buildUpon()
-                                .appendPath(Trailer.YOUTUBE_WATCH_PATH)
-                                .appendQueryParameter(Trailer.VIDEO_PARAM, trailerKey)
-                                .build();
-                        startActivity(new Intent(Intent.ACTION_VIEW, youtubeUri));
-                    }
-                });
-                mTrailerContainer.addView(trailerButton);
+            Button trailerButton = new Button(getActivity());
+            trailerButton.setText(trailerName);
+            trailerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri youtubeUri = Uri.parse(Trailer.YOUTUBE_BASE_URL)
+                            .buildUpon()
+                            .appendPath(Trailer.YOUTUBE_WATCH_PATH)
+                            .appendQueryParameter(Trailer.VIDEO_PARAM, trailerKey)
+                            .build();
+                    startActivity(new Intent(Intent.ACTION_VIEW, youtubeUri));
+                }
+            });
+            mTrailerContainer.addView(trailerButton);
 
-            }
+        }
     }
 
     @Override
@@ -266,6 +270,7 @@ public class DetailActivityFragment extends Fragment
         } else if (loader.getId() == MOVIE_TRAILER_LOADER) {
             if (cursor != null) {
                 loadTrailers(cursor);
+                fetchTrailer();
             }
         }
     }
