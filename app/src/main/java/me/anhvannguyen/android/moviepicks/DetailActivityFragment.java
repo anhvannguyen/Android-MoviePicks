@@ -116,7 +116,7 @@ public class DetailActivityFragment extends Fragment
         if (arguments != null) {
             mUri = arguments.getParcelable(DetailActivityFragment.DETAIL_URI);
         }
-        
+
         return rootView;
     }
 
@@ -137,7 +137,6 @@ public class DetailActivityFragment extends Fragment
         if (cursor == null || cursor.getCount() == 0) {
             return;
         }
-//        mTrailerContainer.removeAllViews();
         while (cursor.moveToNext()) {
             String trailerName = cursor.getString(COL_TRAILER_NAME);
             final String trailerKey = cursor.getString(COL_TRAILER_KEY);
