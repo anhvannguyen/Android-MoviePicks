@@ -7,6 +7,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import me.anhvannguyen.android.moviepicks.sync.MovieSyncAdapter;
+
 
 public class MainActivity extends ActionBarActivity implements MainActivityFragment.ItemSelectedCallback {
     private boolean mTwoPane;
@@ -27,6 +29,8 @@ public class MainActivity extends ActionBarActivity implements MainActivityFragm
         } else {
             mTwoPane = false;
         }
+
+        MovieSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
