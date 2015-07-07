@@ -41,4 +41,8 @@
     <!-- Test menu -->
     <string name="action_test">Test</string>
 
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">android.anhvannguyen.me</string>
+    <string name="content_authority">me.anhvannguyen.android.moviepicks</string>
+
 </resources>
