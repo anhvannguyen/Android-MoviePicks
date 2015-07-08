@@ -31,6 +31,10 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 MovieDbContract.MovieEntry.COLUMN_POPULARITY + " REAL NOT NULL," +
                 MovieDbContract.MovieEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL," +
                 MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH + " TEXT NOT NULL," +
+                MovieDbContract.MovieEntry.COLUMN_RUNTIME + " INTEGER," +
+                MovieDbContract.MovieEntry.COLUMN_HOMEPAGE + " STRING," +
+                MovieDbContract.MovieEntry.COLUMN_STATUS + " STRING," +
+                MovieDbContract.MovieEntry.COLUMN_TAGLINE + " STRING," +
                 MovieDbContract.MovieEntry.COLUMN_FAVORITE + " INTEGER NOT NULL DEFAULT 0" +
                 " );";
         final String SQL_CREATE_TRAILER_TABLE = "CREATE TABLE " + MovieDbContract.TrailerEntry.TABLE_NAME + " (" +

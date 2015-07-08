@@ -65,6 +65,18 @@ public class MovieDbContract {
         // the path of the movie image back drop path
         public static final String COLUMN_BACKDROP_PATH = "backdrop_path";
 
+        // the time length of the movie in minutes
+        public static final String COLUMN_RUNTIME = "runtime";
+
+        // website url for the movie
+        public static final String COLUMN_HOMEPAGE = "homepage";
+
+        // movie status
+        public static final String COLUMN_STATUS = "status";
+
+        // movie tagline
+        public static final String COLUMN_TAGLINE = "tagline";
+
         // if the movie is the user's favorite
         public static final String COLUMN_FAVORITE = "favorite";
 
@@ -96,7 +108,7 @@ public class MovieDbContract {
         // themoviedb.org movie ID
         public static final String COLUMN_MDB_ID = "movie_id";
 
-        // themoviedb.org trailer ID (uuid)
+        // themoviedb.org trailer ID
         public static final String COLUMN_TRAILER_ID = "trailer_id";
 
         // trailer key
