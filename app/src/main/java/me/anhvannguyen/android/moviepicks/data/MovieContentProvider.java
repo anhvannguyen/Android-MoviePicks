@@ -223,6 +223,15 @@ public class MovieContentProvider extends ContentProvider {
                         selectionArgs
                 );
                 break;
+            case MOVIES_WITH_ID:
+                String movieId = MovieDbContract.MovieEntry.getMovieId(uri);
+                rowsUpdated = db.update(
+                        MovieDbContract.MovieEntry.TABLE_NAME,
+                        values,
+                        MovieDbContract.MovieEntry._ID + " = ?",
+                        new String[]{movieId}
+                );
+                break;
             case TRAILERS:
                 rowsUpdated = db.update(
                         MovieDbContract.TrailerEntry.TABLE_NAME,
