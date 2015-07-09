@@ -9,9 +9,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -93,7 +90,6 @@ public class DetailActivityFragment extends Fragment
     private Uri mUri;
 
     public DetailActivityFragment() {
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -130,9 +126,50 @@ public class DetailActivityFragment extends Fragment
     private void fetchTrailer() {
         if (mUri != null && mTrailerContainer.getChildCount() == 0) {
 
+//            String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
+//            new FetchMovieTrailerTask(getActivity(), mDelegate).execute(movieId);
+
             String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
-            new FetchMovieTrailerTask(getActivity(), mDelegate).execute(movieId);
+            final String MOVIE_API_KEY = MovieDbApiKey.getKey();
+            final String MOVIE_API_PARAM = "api_key";
+            final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
+
+            final String MOVIE_PATH = "movie";
+            final String MOVIE_ID = movieId;
+            final String MOVIE_TRAILERS = "videos";
+            final String MOVIE_REVIEWS = "reviews";
+
+            // Build themoviedb.org URI
+            Uri movieUri = Uri.parse(MOVIE_BASE_URL)
+                    .buildUpon()
+                    .appendPath(MOVIE_PATH)
+                    .appendPath(MOVIE_ID)
+                    .appendPath(MOVIE_TRAILERS)
+                    .appendQueryParameter(MOVIE_API_PARAM, MOVIE_API_KEY)
+                    .build();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, movieUri.toString(),
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                Utility.convertTrailerJson(getActivity(), response);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            restartLoader(MOVIE_TRAILER_LOADER);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                        }
+
+                    });
+
+            Volley.newRequestQueue(getActivity()).add(stringRequest);
         }
+
     }
 
     private void restartLoader(int loader) {
@@ -175,65 +212,6 @@ public class DetailActivityFragment extends Fragment
         getLoaderManager().initLoader(MOVIE_DETAIL_LOADER, null, this);
         getLoaderManager().initLoader(MOVIE_TRAILER_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_detail_fragment, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_test) {
-            if (mUri != null) {
-                String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
-//                new FetchMovieTrailerTask(getActivity(), mDelegate).execute(movieId);
-                final String MOVIE_API_KEY = MovieDbApiKey.getKey();
-                final String MOVIE_API_PARAM = "api_key";
-                final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
-
-                final String MOVIE_PATH = "movie";
-                final String MOVIE_ID = movieId;
-                final String MOVIE_TRAILERS = "videos";
-                final String MOVIE_REVIEWS = "reviews";
-
-                // Build themoviedb.org URI
-                Uri movieUri = Uri.parse(MOVIE_BASE_URL)
-                        .buildUpon()
-                        .appendPath(MOVIE_PATH)
-                        .appendPath(MOVIE_ID)
-                        .appendPath(MOVIE_TRAILERS)
-                        .appendQueryParameter(MOVIE_API_PARAM, MOVIE_API_KEY)
-                        .build();
-
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, movieUri.toString(),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    Utility.convertTrailerJson(getActivity(), response);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                restartLoader(MOVIE_TRAILER_LOADER);
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                            }
-
-                        });
-
-                Volley.newRequestQueue(getActivity()).add(stringRequest);
-            }
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
