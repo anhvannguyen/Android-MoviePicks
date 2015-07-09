@@ -1,14 +1,22 @@
 package me.anhvannguyen.android.moviepicks;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
+
+import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 
 /**
  * Created by anhvannguyen on 6/13/15.
@@ -44,5 +52,60 @@ public class Utility {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public static Void convertTrailerJson(Context context, String movieDetailJson) throws JSONException {
+        final String TRAILER_TYPE = "Trailer";
+        final String TRAILER_SITE = "YouTube";
+
+        // These are the names of the JSON objects that need to be extracted.
+        final String MDB_MOVIE_ID = "id";                   // int
+        final String MDB_RESULT = "results";                // result array
+        final String MDB_TRAILER_ID = "id";                 // uuid
+        final String MDB_KEY = "key";                       // String
+        final String MDB_NAME = "name";                     // String
+        final String MDB_SITE = "site";                     // String
+        final String MDB_TYPE = "type";                     // String
+
+        JSONObject trailerObject = new JSONObject(movieDetailJson);
+        int movieId = trailerObject.getInt(MDB_MOVIE_ID);
+
+        JSONArray trailerArray = trailerObject.getJSONArray(MDB_RESULT);
+        int trailerArrayCount = trailerArray.length();
+
+        Vector<ContentValues> cVVector = new Vector<ContentValues>(trailerArrayCount);
+
+        for (int i=0; i < trailerArrayCount; i++) {
+            JSONObject movieObject = trailerArray.getJSONObject(i);
+
+            String trailerID = movieObject.getString(MDB_TRAILER_ID);
+            String key = movieObject.getString(MDB_KEY);
+            String name = movieObject.getString(MDB_NAME);
+            String site = movieObject.getString(MDB_SITE);
+            String type = movieObject.getString(MDB_TYPE);
+
+            // Only adding Trailers from Youtube
+            if (site.equals(TRAILER_SITE) && type.equals(TRAILER_TYPE)) {
+                ContentValues trailerValue = new ContentValues();
+
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_MDB_ID, movieId);
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_TRAILER_ID, trailerID);
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_KEY, key);
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_NAME, name);
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_SITE, site);
+                trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_TYPE, type);
+
+                cVVector.add(trailerValue);
+
+            }
+        }
+
+        // add to database
+        if ( cVVector.size() > 0 ) {
+            ContentValues[] contentValues = new ContentValues[cVVector.size()];
+            cVVector.toArray(contentValues);
+            context.getContentResolver().bulkInsert(MovieDbContract.TrailerEntry.CONTENT_URI, contentValues);
+        }
+        return null;
     }
 }

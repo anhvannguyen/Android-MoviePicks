@@ -20,7 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
 
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 import me.anhvannguyen.android.moviepicks.data.Trailer;
@@ -128,6 +135,10 @@ public class DetailActivityFragment extends Fragment
         }
     }
 
+    private void restartLoader(int loader) {
+        getLoaderManager().restartLoader(loader, null, this);
+    }
+
     @Override
     public void processTrailer() {
         getLoaderManager().restartLoader(MOVIE_TRAILER_LOADER, null, this);
@@ -181,7 +192,45 @@ public class DetailActivityFragment extends Fragment
         if (id == R.id.action_test) {
             if (mUri != null) {
                 String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
-                new FetchMovieTrailerTask(getActivity(), mDelegate).execute(movieId);
+//                new FetchMovieTrailerTask(getActivity(), mDelegate).execute(movieId);
+                final String MOVIE_API_KEY = MovieDbApiKey.getKey();
+                final String MOVIE_API_PARAM = "api_key";
+                final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
+
+                final String MOVIE_PATH = "movie";
+                final String MOVIE_ID = movieId;
+                final String MOVIE_TRAILERS = "videos";
+                final String MOVIE_REVIEWS = "reviews";
+
+                // Build themoviedb.org URI
+                Uri movieUri = Uri.parse(MOVIE_BASE_URL)
+                        .buildUpon()
+                        .appendPath(MOVIE_PATH)
+                        .appendPath(MOVIE_ID)
+                        .appendPath(MOVIE_TRAILERS)
+                        .appendQueryParameter(MOVIE_API_PARAM, MOVIE_API_KEY)
+                        .build();
+
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, movieUri.toString(),
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    Utility.convertTrailerJson(getActivity(), response);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                restartLoader(MOVIE_TRAILER_LOADER);
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                            }
+
+                        });
+
+                Volley.newRequestQueue(getActivity()).add(stringRequest);
             }
         }
         return super.onOptionsItemSelected(item);
