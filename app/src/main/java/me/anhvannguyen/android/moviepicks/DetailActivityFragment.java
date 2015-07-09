@@ -21,7 +21,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -31,7 +30,7 @@ import me.anhvannguyen.android.moviepicks.data.Trailer;
 
 
 public class DetailActivityFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, FetchMovieTrailerTask.finishFetchCallback {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
     private final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
     private static final int MOVIE_DETAIL_LOADER = 0;
@@ -97,8 +96,6 @@ public class DetailActivityFragment extends Fragment
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        mDelegate = this;
-
         mIdTextView = (TextView) rootView.findViewById(R.id.detail_id_textview);
         mTitleTextView = (TextView) rootView.findViewById(R.id.detail_title_textview);
         mOriginalTitleTextView = (TextView) rootView.findViewById(R.id.detail_original_title_textview);
@@ -149,18 +146,13 @@ public class DetailActivityFragment extends Fragment
 
                     });
 
-            Volley.newRequestQueue(getActivity()).add(stringRequest);
+            VolleySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
         }
 
     }
 
     private void restartLoader(int loader) {
         getLoaderManager().restartLoader(loader, null, this);
-    }
-
-    @Override
-    public void processTrailer() {
-        getLoaderManager().restartLoader(MOVIE_TRAILER_LOADER, null, this);
     }
 
     private void loadTrailers(Cursor cursor) {
