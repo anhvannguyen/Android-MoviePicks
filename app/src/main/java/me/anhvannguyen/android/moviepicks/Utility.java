@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import org.json.JSONArray;
@@ -22,7 +23,10 @@ import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
  * Created by anhvannguyen on 6/13/15.
  */
 public class Utility {
-    public static String MDB_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
+    public static final String MOVIE_API_KEY = MovieDbApiKey.getKey();
+    public static final String MOVIE_API_PARAM = "api_key";
+    public static final String MOVIE_BASE_URL = "http://api.themoviedb.org/3";
+    public static final String MDB_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
 
     public static int getSortingPreference(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -48,10 +52,27 @@ public class Utility {
     }
 
     public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager)context
+        ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public static String getTrailerUrl(String movieId) {
+        final String MOVIE_PATH = "movie";
+        final String MOVIE_ID = movieId;
+        final String MOVIE_TRAILERS = "videos";
+
+        // Build themoviedb.org URI
+        Uri movieUri = Uri.parse(MOVIE_BASE_URL)
+                .buildUpon()
+                .appendPath(MOVIE_PATH)
+                .appendPath(MOVIE_ID)
+                .appendPath(MOVIE_TRAILERS)
+                .appendQueryParameter(MOVIE_API_PARAM, MOVIE_API_KEY)
+                .build();
+
+        return movieUri.toString();
     }
 
     public static Void convertTrailerJson(Context context, String movieDetailJson) throws JSONException {
@@ -75,7 +96,7 @@ public class Utility {
 
         Vector<ContentValues> cVVector = new Vector<ContentValues>(trailerArrayCount);
 
-        for (int i=0; i < trailerArrayCount; i++) {
+        for (int i = 0; i < trailerArrayCount; i++) {
             JSONObject movieObject = trailerArray.getJSONObject(i);
 
             String trailerID = movieObject.getString(MDB_TRAILER_ID);
@@ -101,7 +122,7 @@ public class Utility {
         }
 
         // add to database
-        if ( cVVector.size() > 0 ) {
+        if (cVVector.size() > 0) {
             ContentValues[] contentValues = new ContentValues[cVVector.size()];
             cVVector.toArray(contentValues);
             context.getContentResolver().bulkInsert(MovieDbContract.TrailerEntry.CONTENT_URI, contentValues);
