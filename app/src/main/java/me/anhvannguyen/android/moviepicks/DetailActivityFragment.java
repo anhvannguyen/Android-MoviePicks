@@ -164,6 +164,28 @@ public class DetailActivityFragment extends Fragment
     }
 
     private void fetchMovieDetail() {
+        String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Utility.getDetailUrl(movieId),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            Utility.convertDetailJson(getActivity(), response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        restartLoader(MOVIE_DETAIL_LOADER);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+
+                });
+
+        VolleySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
 
     }
 
@@ -243,6 +265,10 @@ public class DetailActivityFragment extends Fragment
                 return;
             }
 
+//            if (cursor.isNull(COL_MOVIE_RUNTIME)) {
+//                fetchMovieDetail();
+//            }
+
             final float MAX_RATING = 10.0f;
 
             int id = cursor.getInt(COL_MOVIE_ID);
@@ -272,6 +298,20 @@ public class DetailActivityFragment extends Fragment
             Double popularity = cursor.getDouble(COL_MOVIE_POPULARITY);
             mPopularityTextView.setText("Popularity: " + popularity);
 
+
+            if (!cursor.isNull(COL_MOVIE_RUNTIME)) {
+                int runtime = cursor.getInt(COL_MOVIE_RUNTIME);
+                mRuntimeTextView.setText("Runtime: "+ runtime);
+
+                String status = cursor.getString(COL_MOVIE_STATUS);
+                mStatusTextView.setText("Status: " + status);
+
+                String tagline = cursor.getString(COL_MOVIE_TAGLINE);
+                mTaglineTextView.setText("Tagline: " + tagline);
+            } else {
+                fetchMovieDetail();
+            }
+
             String backdropPath = cursor.getString(COL_MOVIE_BACKDROP_PATH);
             String backdropFullPath = Utility.getFullImagePath(getString(R.string.image_backdrop_w780), backdropPath);
             Picasso.with(getActivity())
@@ -284,9 +324,12 @@ public class DetailActivityFragment extends Fragment
                     .load(posterFullPath)
                     .into(mPosterImage);
         } else if (loader.getId() == MOVIE_TRAILER_LOADER) {
+            // TODO: Fix bug where trailer sometimes load twice
             if (cursor != null) {
                 loadTrailers(cursor);
-                fetchTrailer();
+                if (mTrailerContainer.getChildCount() == 0) {
+                    fetchTrailer();
+                }
             }
         }
     }
