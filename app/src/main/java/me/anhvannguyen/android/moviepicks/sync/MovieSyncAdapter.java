@@ -14,6 +14,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +33,8 @@ import java.util.Vector;
 
 import me.anhvannguyen.android.moviepicks.MovieDbApiKey;
 import me.anhvannguyen.android.moviepicks.R;
+import me.anhvannguyen.android.moviepicks.Utility;
+import me.anhvannguyen.android.moviepicks.VolleySingleton;
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 
 /**
@@ -60,8 +67,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
             final String ITEM_CONTENT_PATH = "movie";
             final String SORT_PARAM = "sort_by";
             final String SORT_OPTION = "popularity.desc";
-            final String VOTECOUNT_PARAM = "vote_count.gte";
-            final int MIN_VOTE_COUNT = 100;
 
             // Build themoviedb.org URI
             Uri movieUri = Uri.parse(MOVIE_BASE_URL)
@@ -205,6 +210,34 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
             getContext().getContentResolver().bulkInsert(MovieDbContract.MovieEntry.CONTENT_URI, contentValues);
         }
 
+        for (ContentValues value : cVVector) {
+            int movieId = value.getAsInteger(MovieDbContract.MovieEntry._ID);
+            requestDetail(movieId);
+        }
+
+    }
+
+    private void requestDetail(int id) {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Utility.getDetailUrl(String.valueOf(id)),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            Utility.convertDetailJson(getContext(), response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+
+                });
+
+        VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 
     /**
