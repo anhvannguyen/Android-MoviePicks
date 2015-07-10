@@ -75,7 +75,7 @@ public class Utility {
         return movieUri.toString();
     }
 
-    public static Void convertTrailerJson(Context context, String movieDetailJson) throws JSONException {
+    public static Void convertTrailerJson(Context context, String movieTrailerJson) throws JSONException {
         final String TRAILER_TYPE = "Trailer";
         final String TRAILER_SITE = "YouTube";
 
@@ -88,7 +88,7 @@ public class Utility {
         final String MDB_SITE = "site";                     // String
         final String MDB_TYPE = "type";                     // String
 
-        JSONObject trailerObject = new JSONObject(movieDetailJson);
+        JSONObject trailerObject = new JSONObject(movieTrailerJson);
         int movieId = trailerObject.getInt(MDB_MOVIE_ID);
 
         JSONArray trailerArray = trailerObject.getJSONArray(MDB_RESULT);
@@ -127,6 +127,37 @@ public class Utility {
             cVVector.toArray(contentValues);
             context.getContentResolver().bulkInsert(MovieDbContract.TrailerEntry.CONTENT_URI, contentValues);
         }
+        return null;
+    }
+
+    public static Void convertDetailJson(Context context, String movieDetailJson) throws JSONException {
+        final String MDB_ID = "id";                 // int
+        final String MDB_RUNTIME = "runtime";       // int
+        final String MDB_HOMEPAGE = "homepage";     // String
+        final String MDB_STATUS = "status";         // String
+        final String MDB_TAGLINE = "tagline";       // String
+
+        JSONObject movieDetailObject = new JSONObject(movieDetailJson);
+
+        int id = movieDetailObject.getInt(MDB_ID);
+        int runtime = movieDetailObject.getInt(MDB_RUNTIME);
+        String homepage = movieDetailObject.getString(MDB_HOMEPAGE);
+        String status = movieDetailObject.getString(MDB_STATUS);
+        String tagline = movieDetailObject.getString(MDB_TAGLINE);
+
+        ContentValues value = new ContentValues();
+        value.put(MovieDbContract.MovieEntry.COLUMN_RUNTIME, runtime);
+        value.put(MovieDbContract.MovieEntry.COLUMN_HOMEPAGE, homepage);
+        value.put(MovieDbContract.MovieEntry.COLUMN_STATUS, status);
+        value.put(MovieDbContract.MovieEntry.COLUMN_TAGLINE, tagline);
+
+        context.getContentResolver().update(
+                MovieDbContract.MovieEntry.CONTENT_URI,
+                value,
+                MovieDbContract.MovieEntry._ID + " = ?",
+                new String[]{String.valueOf(id)}
+        );
+
         return null;
     }
 }
