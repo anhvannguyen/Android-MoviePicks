@@ -48,6 +48,9 @@ public class DetailActivityFragment extends Fragment
             MovieDbContract.MovieEntry.COLUMN_POPULARITY,
             MovieDbContract.MovieEntry.COLUMN_POSTER_PATH,
             MovieDbContract.MovieEntry.COLUMN_BACKDROP_PATH,
+            MovieDbContract.MovieEntry.COLUMN_RUNTIME,
+            MovieDbContract.MovieEntry.COLUMN_STATUS,
+            MovieDbContract.MovieEntry.COLUMN_TAGLINE,
             MovieDbContract.MovieEntry.COLUMN_FAVORITE
     };
 
@@ -61,7 +64,10 @@ public class DetailActivityFragment extends Fragment
     public static final int COL_MOVIE_POPULARITY = 7;
     public static final int COL_MOVIE_POSTER_PATH = 8;
     public static final int COL_MOVIE_BACKDROP_PATH = 9;
-    public static final int COL_MOVIE_FAVORITE = 10;
+    public static final int COL_MOVIE_RUNTIME = 10;
+    public static final int COL_MOVIE_STATUS = 11;
+    public static final int COL_MOVIE_TAGLINE = 12;
+    public static final int COL_MOVIE_FAVORITE = 13;
 
     private static final String[] TRAILER_PROJECTION = {
             MovieDbContract.TrailerEntry.COLUMN_NAME,
@@ -82,6 +88,9 @@ public class DetailActivityFragment extends Fragment
     private TextView mPopularityTextView;
     private ImageView mBackdropImage;
     private ImageView mPosterImage;
+    private TextView mRuntimeTextView;
+    private TextView mStatusTextView;
+    private TextView mTaglineTextView;
     private LinearLayout mTrailerContainer;
 
     private FetchMovieTrailerTask.finishFetchCallback mDelegate;
@@ -107,6 +116,9 @@ public class DetailActivityFragment extends Fragment
         mPopularityTextView = (TextView) rootView.findViewById(R.id.detail_popuarity_textview);
         mBackdropImage = (ImageView) rootView.findViewById(R.id.detail_backdrop_imageview);
         mPosterImage = (ImageView) rootView.findViewById(R.id.detail_poster_imageview);
+        mRuntimeTextView = (TextView) rootView.findViewById(R.id.detail_runtime_textview);
+        mStatusTextView = (TextView) rootView.findViewById(R.id.detail_status_textview);
+        mTaglineTextView = (TextView) rootView.findViewById(R.id.detail_tagline_textview);
         mTrailerContainer = (LinearLayout) rootView.findViewById(R.id.trailer_container);
 
 
@@ -142,12 +154,16 @@ public class DetailActivityFragment extends Fragment
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
                         }
 
                     });
 
             VolleySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
         }
+    }
+
+    private void fetchMovieDetail() {
 
     }
 
