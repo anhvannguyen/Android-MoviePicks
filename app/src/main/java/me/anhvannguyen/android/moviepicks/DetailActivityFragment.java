@@ -1,5 +1,6 @@
 package me.anhvannguyen.android.moviepicks;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +22,14 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Vector;
 
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 import me.anhvannguyen.android.moviepicks.data.Trailer;
@@ -93,8 +99,6 @@ public class DetailActivityFragment extends Fragment
     private TextView mTaglineTextView;
     private LinearLayout mTrailerContainer;
 
-    private FetchMovieTrailerTask.finishFetchCallback mDelegate;
-
     private Uri mUri;
 
     public DetailActivityFragment() {
@@ -135,20 +139,70 @@ public class DetailActivityFragment extends Fragment
     private void fetchTrailer() {
         if (mUri != null && mTrailerContainer.getChildCount() == 0) {
 
-//            String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
-//            new FetchMovieTrailerTask(getActivity(), mDelegate).execute(movieId);
-
             String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, Utility.getTrailerUrl(movieId),
-                    new Response.Listener<String>() {
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Utility.getTrailerUrl(movieId), null,
+                    new Response.Listener<JSONObject>() {
                         @Override
-                        public void onResponse(String response) {
+                        public void onResponse(JSONObject response) {
+                            if (mTrailerContainer.getChildCount() != 0) {
+                                return;
+                            }
+                            final String TRAILER_TYPE = "Trailer";
+                            final String TRAILER_SITE = "YouTube";
+
+                            // These are the names of the JSON objects that need to be extracted.
+                            final String MDB_MOVIE_ID = "id";                   // int
+                            final String MDB_RESULT = "results";                // result array
+                            final String MDB_TRAILER_ID = "id";                 // uuid
+                            final String MDB_KEY = "key";                       // String
+                            final String MDB_NAME = "name";                     // String
+                            final String MDB_SITE = "site";                     // String
+                            final String MDB_TYPE = "type";                     // String
+
                             try {
-                                Utility.convertTrailerJson(getActivity(), response);
+                                int id = response.getInt(MDB_MOVIE_ID);
+                                JSONArray trailerArray = response.getJSONArray(MDB_RESULT);
+
+                                int trailerArrayCount = trailerArray.length();
+
+                                Vector<ContentValues> cVVector = new Vector<ContentValues>(trailerArrayCount);
+
+                                for (int i = 0; i < trailerArrayCount; i++) {
+                                    JSONObject movieObject = trailerArray.getJSONObject(i);
+
+                                    final String trailerID = movieObject.getString(MDB_TRAILER_ID);
+                                    final String key = movieObject.getString(MDB_KEY);
+                                    final String name = movieObject.getString(MDB_NAME);
+                                    final String site = movieObject.getString(MDB_SITE);
+                                    final String type = movieObject.getString(MDB_TYPE);
+
+                                    // cache data
+                                    if (site.equals(TRAILER_SITE) && type.equals(TRAILER_TYPE)) {
+                                        ContentValues trailerValue = new ContentValues();
+
+                                        trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_MDB_ID, id);
+                                        trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_TRAILER_ID, trailerID);
+                                        trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_KEY, key);
+                                        trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_NAME, name);
+                                        trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_SITE, site);
+                                        trailerValue.put(MovieDbContract.TrailerEntry.COLUMN_TYPE, type);
+
+                                        cVVector.add(trailerValue);
+                                    }
+
+                                }
+
+                                if (cVVector.size() > 0) {
+                                    ContentValues[] contentValues = new ContentValues[cVVector.size()];
+                                    cVVector.toArray(contentValues);
+                                    getActivity().getContentResolver().bulkInsert(MovieDbContract.TrailerEntry.CONTENT_URI, contentValues);
+                                }
+                                restartLoader(MOVIE_TRAILER_LOADER);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            restartLoader(MOVIE_TRAILER_LOADER);
+
                         }
                     },
                     new Response.ErrorListener() {
@@ -156,25 +210,53 @@ public class DetailActivityFragment extends Fragment
                         public void onErrorResponse(VolleyError error) {
                             error.printStackTrace();
                         }
-
                     });
 
-            VolleySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
+            VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjectRequest);
         }
     }
 
     private void fetchMovieDetail() {
         String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, Utility.getDetailUrl(movieId),
-                new Response.Listener<String>() {
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Utility.getDetailUrl(movieId), null,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONObject response) {
+                        final String MDB_ID = "id";                 // int
+                        final String MDB_RUNTIME = "runtime";       // int
+                        final String MDB_HOMEPAGE = "homepage";     // String
+                        final String MDB_STATUS = "status";         // String
+                        final String MDB_TAGLINE = "tagline";       // String
+
                         try {
-                            Utility.convertDetailJson(getActivity(), response);
+                            int id = response.getInt(MDB_ID);
+                            int runtime = response.getInt(MDB_RUNTIME);
+                            String homepage = response.getString(MDB_HOMEPAGE);
+                            String status = response.getString(MDB_STATUS);
+                            String tagline = response.getString(MDB_TAGLINE);
+
+                            mRuntimeTextView.setText("Runtime: " + runtime);
+                            mStatusTextView.setText("Status: " + status);
+                            mTaglineTextView.setText("Tagline: " + tagline);
+
+                            // cache data
+                            ContentValues value = new ContentValues();
+                            value.put(MovieDbContract.MovieEntry.COLUMN_RUNTIME, runtime);
+                            value.put(MovieDbContract.MovieEntry.COLUMN_HOMEPAGE, homepage);
+                            value.put(MovieDbContract.MovieEntry.COLUMN_STATUS, status);
+                            value.put(MovieDbContract.MovieEntry.COLUMN_TAGLINE, tagline);
+
+                            getActivity().getContentResolver().update(
+                                    MovieDbContract.MovieEntry.CONTENT_URI,
+                                    value,
+                                    MovieDbContract.MovieEntry._ID + " = ?",
+                                    new String[]{String.valueOf(id)}
+                            );
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        restartLoader(MOVIE_DETAIL_LOADER);
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -182,11 +264,9 @@ public class DetailActivityFragment extends Fragment
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                     }
-
                 });
 
-        VolleySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
-
+        VolleySingleton.getInstance(getActivity()).addToRequestQueue(jsonObjectRequest);
     }
 
     private void restartLoader(int loader) {
@@ -194,9 +274,10 @@ public class DetailActivityFragment extends Fragment
     }
 
     private void loadTrailers(Cursor cursor) {
-        if (cursor == null || cursor.getCount() == 0) {
+        if (mTrailerContainer.getChildCount() != 0) {
             return;
         }
+        Log.d(LOG_TAG, "**** Load Trailer Called ****");
         while (cursor.moveToNext()) {
             String trailerName = cursor.getString(COL_TRAILER_NAME);
             final String trailerKey = cursor.getString(COL_TRAILER_KEY);
@@ -265,10 +346,6 @@ public class DetailActivityFragment extends Fragment
                 return;
             }
 
-//            if (cursor.isNull(COL_MOVIE_RUNTIME)) {
-//                fetchMovieDetail();
-//            }
-
             final float MAX_RATING = 10.0f;
 
             int id = cursor.getInt(COL_MOVIE_ID);
@@ -298,16 +375,17 @@ public class DetailActivityFragment extends Fragment
             Double popularity = cursor.getDouble(COL_MOVIE_POPULARITY);
             mPopularityTextView.setText("Popularity: " + popularity);
 
-
             if (!cursor.isNull(COL_MOVIE_RUNTIME)) {
+
                 int runtime = cursor.getInt(COL_MOVIE_RUNTIME);
-                mRuntimeTextView.setText("Runtime: "+ runtime);
+                mRuntimeTextView.setText("Runtime: " + runtime);
 
                 String status = cursor.getString(COL_MOVIE_STATUS);
                 mStatusTextView.setText("Status: " + status);
 
                 String tagline = cursor.getString(COL_MOVIE_TAGLINE);
                 mTaglineTextView.setText("Tagline: " + tagline);
+
             } else {
                 fetchMovieDetail();
             }
@@ -324,12 +402,10 @@ public class DetailActivityFragment extends Fragment
                     .load(posterFullPath)
                     .into(mPosterImage);
         } else if (loader.getId() == MOVIE_TRAILER_LOADER) {
-            // TODO: Fix bug where trailer sometimes load twice
-            if (cursor != null) {
+            if (cursor != null && cursor.getCount() != 0) {
                 loadTrailers(cursor);
-                if (mTrailerContainer.getChildCount() == 0) {
-                    fetchTrailer();
-                }
+            } else if (mTrailerContainer.getChildCount() == 0 && cursor.getCount() == 0) {
+                fetchTrailer();
             }
         }
     }
