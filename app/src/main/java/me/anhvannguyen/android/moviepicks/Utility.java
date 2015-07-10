@@ -75,6 +75,21 @@ public class Utility {
         return movieUri.toString();
     }
 
+    public static String getDetailUrl(String movieId) {
+        final String MOVIE_PATH = "movie";
+        final String MOVIE_ID = movieId;
+
+        // Build themoviedb.org URI
+        Uri movieUri = Uri.parse(MOVIE_BASE_URL)
+                .buildUpon()
+                .appendPath(MOVIE_PATH)
+                .appendPath(MOVIE_ID)
+                .appendQueryParameter(MOVIE_API_PARAM, MOVIE_API_KEY)
+                .build();
+
+        return movieUri.toString();
+    }
+
     public static Void convertTrailerJson(Context context, String movieTrailerJson) throws JSONException {
         final String TRAILER_TYPE = "Trailer";
         final String TRAILER_SITE = "YouTube";
