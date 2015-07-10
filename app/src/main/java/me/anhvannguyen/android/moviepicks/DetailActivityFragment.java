@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -274,10 +273,6 @@ public class DetailActivityFragment extends Fragment
     }
 
     private void loadTrailers(Cursor cursor) {
-        if (mTrailerContainer.getChildCount() != 0) {
-            return;
-        }
-        Log.d(LOG_TAG, "**** Load Trailer Called ****");
         while (cursor.moveToNext()) {
             String trailerName = cursor.getString(COL_TRAILER_NAME);
             final String trailerKey = cursor.getString(COL_TRAILER_KEY);
@@ -402,9 +397,30 @@ public class DetailActivityFragment extends Fragment
                     .load(posterFullPath)
                     .into(mPosterImage);
         } else if (loader.getId() == MOVIE_TRAILER_LOADER) {
-            if (cursor != null && cursor.getCount() != 0) {
-                loadTrailers(cursor);
-            } else if (mTrailerContainer.getChildCount() == 0 && cursor.getCount() == 0) {
+            if (cursor != null) {
+                mTrailerContainer.removeAllViews();
+                while (cursor.moveToNext()) {
+                    String trailerName = cursor.getString(COL_TRAILER_NAME);
+                    final String trailerKey = cursor.getString(COL_TRAILER_KEY);
+
+                    Button trailerButton = new Button(getActivity());
+                    trailerButton.setText(trailerName);
+                    trailerButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Uri youtubeUri = Uri.parse(Trailer.YOUTUBE_BASE_URL)
+                                    .buildUpon()
+                                    .appendPath(Trailer.YOUTUBE_WATCH_PATH)
+                                    .appendQueryParameter(Trailer.VIDEO_PARAM, trailerKey)
+                                    .build();
+                            startActivity(new Intent(Intent.ACTION_VIEW, youtubeUri));
+                        }
+                    });
+                    mTrailerContainer.addView(trailerButton);
+
+                }
+            }
+            if (mTrailerContainer.getChildCount() <= 0) {
                 fetchTrailer();
             }
         }
