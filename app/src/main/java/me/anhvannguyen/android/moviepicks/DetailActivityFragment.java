@@ -13,7 +13,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -131,6 +130,14 @@ public class DetailActivityFragment extends Fragment
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
 
         mRatingBar.setVisibility(View.INVISIBLE);
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -402,26 +409,26 @@ public class DetailActivityFragment extends Fragment
                     .load(posterFullPath)
                     .into(mPosterImage);
 
-            AppCompatActivity activity = (AppCompatActivity)getActivity();
-            Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
+//            AppCompatActivity activity = (AppCompatActivity)getActivity();
+//            Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
 
             // We need to start the enter transition after the data has loaded
-            if (activity instanceof DetailActivity) {
-                activity.supportStartPostponedEnterTransition();
-
-                if (toolbarView != null) {
-                    activity.setSupportActionBar(toolbarView);
-
-                    activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-                    activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                }
-            } else {
-                if (toolbarView != null) {
-                    Menu menu = toolbarView.getMenu();
-                    if (menu != null) menu.clear();
-                    toolbarView.inflateMenu(R.menu.menu_detail_fragment);
-                }
-            }
+//            if (activity instanceof DetailActivity) {
+//                activity.supportStartPostponedEnterTransition();
+//
+//                if (toolbarView != null) {
+//                    activity.setSupportActionBar(toolbarView);
+//
+//                    activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+//                    activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//                }
+//            } else {
+//                if (toolbarView != null) {
+//                    Menu menu = toolbarView.getMenu();
+//                    if (menu != null) menu.clear();
+//                    toolbarView.inflateMenu(R.menu.menu_detail_fragment);
+//                }
+//            }
 
             mCollapsingToolbarLayout.setTitle(originalTitle);
             mCollapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
