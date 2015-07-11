@@ -3,20 +3,25 @@ package me.anhvannguyen.android.moviepicks;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import me.anhvannguyen.android.moviepicks.sync.MovieSyncAdapter;
 
 
-public class MainActivity extends ActionBarActivity implements MainActivityFragment.ItemSelectedCallback {
+public class MainActivity extends AppCompatActivity implements MainActivityFragment.ItemSelectedCallback {
     private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         if (findViewById(R.id.movie_detail_container) != null) {
             mTwoPane = true;

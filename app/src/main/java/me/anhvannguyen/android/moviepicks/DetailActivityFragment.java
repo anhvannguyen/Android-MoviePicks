@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -97,6 +101,7 @@ public class DetailActivityFragment extends Fragment
     private TextView mStatusTextView;
     private TextView mTaglineTextView;
     private LinearLayout mTrailerContainer;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     private Uri mUri;
 
@@ -123,7 +128,7 @@ public class DetailActivityFragment extends Fragment
         mStatusTextView = (TextView) rootView.findViewById(R.id.detail_status_textview);
         mTaglineTextView = (TextView) rootView.findViewById(R.id.detail_tagline_textview);
         mTrailerContainer = (LinearLayout) rootView.findViewById(R.id.trailer_container);
-
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
 
         mRatingBar.setVisibility(View.INVISIBLE);
 
@@ -396,6 +401,31 @@ public class DetailActivityFragment extends Fragment
             Picasso.with(getActivity())
                     .load(posterFullPath)
                     .into(mPosterImage);
+
+            AppCompatActivity activity = (AppCompatActivity)getActivity();
+            Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
+
+            // We need to start the enter transition after the data has loaded
+            if (activity instanceof DetailActivity) {
+                activity.supportStartPostponedEnterTransition();
+
+                if (toolbarView != null) {
+                    activity.setSupportActionBar(toolbarView);
+
+                    activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+                    activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                }
+            } else {
+                if (toolbarView != null) {
+                    Menu menu = toolbarView.getMenu();
+                    if (menu != null) menu.clear();
+                    toolbarView.inflateMenu(R.menu.menu_detail_fragment);
+                }
+            }
+
+            mCollapsingToolbarLayout.setTitle(originalTitle);
+            mCollapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
         } else if (loader.getId() == MOVIE_TRAILER_LOADER) {
             if (cursor != null) {
                 mTrailerContainer.removeAllViews();
