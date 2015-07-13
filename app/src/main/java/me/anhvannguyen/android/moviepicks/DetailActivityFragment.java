@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -85,15 +84,15 @@ public class DetailActivityFragment extends Fragment
     public static final int COL_TRAILER_NAME = 0;
     public static final int COL_TRAILER_KEY = 1;
 
-    private TextView mIdTextView;
-    private TextView mTitleTextView;
-    private TextView mOriginalTitleTextView;
+//    private TextView mIdTextView;
+//    private TextView mTitleTextView;
+//    private TextView mOriginalTitleTextView;
     private TextView mOverviewTextView;
     private TextView mReleaseDateTextView;
     private TextView mVoteAverageTextView;
-    private RatingBar mRatingBar;
+//    private RatingBar mRatingBar;
     private TextView mVoteCountTextView;
-    private TextView mPopularityTextView;
+//    private TextView mPopularityTextView;
     private ImageView mBackdropImage;
     private ImageView mPosterImage;
     private TextView mRuntimeTextView;
@@ -112,15 +111,15 @@ public class DetailActivityFragment extends Fragment
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        mIdTextView = (TextView) rootView.findViewById(R.id.detail_id_textview);
-        mTitleTextView = (TextView) rootView.findViewById(R.id.detail_title_textview);
-        mOriginalTitleTextView = (TextView) rootView.findViewById(R.id.detail_original_title_textview);
+//        mIdTextView = (TextView) rootView.findViewById(R.id.detail_id_textview);
+//        mTitleTextView = (TextView) rootView.findViewById(R.id.detail_title_textview);
+//        mOriginalTitleTextView = (TextView) rootView.findViewById(R.id.detail_original_title_textview);
         mOverviewTextView = (TextView) rootView.findViewById(R.id.detail_overview_textview);
         mReleaseDateTextView = (TextView) rootView.findViewById(R.id.detail_release_date_textview);
         mVoteAverageTextView = (TextView) rootView.findViewById(R.id.detail_vote_average_textview);
-        mRatingBar = (RatingBar) rootView.findViewById(R.id.detail_rating_bar);
+//        mRatingBar = (RatingBar) rootView.findViewById(R.id.detail_rating_bar);
         mVoteCountTextView = (TextView) rootView.findViewById(R.id.detail_vote_count_textview);
-        mPopularityTextView = (TextView) rootView.findViewById(R.id.detail_popuarity_textview);
+//        mPopularityTextView = (TextView) rootView.findViewById(R.id.detail_popuarity_textview);
         mBackdropImage = (ImageView) rootView.findViewById(R.id.detail_backdrop_imageview);
         mPosterImage = (ImageView) rootView.findViewById(R.id.detail_poster_imageview);
         mRuntimeTextView = (TextView) rootView.findViewById(R.id.detail_runtime_textview);
@@ -129,7 +128,7 @@ public class DetailActivityFragment extends Fragment
         mTrailerContainer = (LinearLayout) rootView.findViewById(R.id.trailer_container);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
 
-        mRatingBar.setVisibility(View.INVISIBLE);
+//        mRatingBar.setVisibility(View.INVISIBLE);
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
@@ -247,9 +246,9 @@ public class DetailActivityFragment extends Fragment
                             String status = response.getString(MDB_STATUS);
                             String tagline = response.getString(MDB_TAGLINE);
 
-                            mRuntimeTextView.setText("Runtime: " + runtime);
-                            mStatusTextView.setText("Status: " + status);
-                            mTaglineTextView.setText("Tagline: " + tagline);
+                            mRuntimeTextView.setText(getString(R.string.detail_runtime_format, runtime));
+                            mStatusTextView.setText(status);
+                            mTaglineTextView.setText(tagline);
 
                             // cache data
                             ContentValues value = new ContentValues();
@@ -355,43 +354,43 @@ public class DetailActivityFragment extends Fragment
 
             final float MAX_RATING = 10.0f;
 
-            int id = cursor.getInt(COL_MOVIE_ID);
-            mIdTextView.setText("ID: " + id);
+//            int id = cursor.getInt(COL_MOVIE_ID);
+//            mIdTextView.setText("ID: " + id);
 
-            String title = cursor.getString(COL_MOVIE_TITLE);
-            mTitleTextView.setText("Title: " + title);
+//            String title = cursor.getString(COL_MOVIE_TITLE);
+//            mTitleTextView.setText("Title: " + title);
 
             String originalTitle = cursor.getString(COL_MOVIE_ORIGINAL_TITLE);
-            mOriginalTitleTextView.setText("Original Title: " + originalTitle);
+//            mOriginalTitleTextView.setText("Original Title: " + originalTitle);
 
             String overview = cursor.getString(COL_MOVIE_OVERVIEW);
-            mOverviewTextView.setText("Overview: " + overview);
+            mOverviewTextView.setText(overview);
 
             String releaseDate = cursor.getString(COL_MOVIE_RELEASE_DATE);
-            mReleaseDateTextView.setText("Released: " + releaseDate);
+            mReleaseDateTextView.setText(releaseDate);
 
             Double voteAverage = cursor.getDouble(COL_MOVIE_VOTE_AVERAGE);
-            mVoteAverageTextView.setText("Rating: " + voteAverage);
+            mVoteAverageTextView.setText(getString(R.string.detail_score_format, voteAverage));
 
-            mRatingBar.setVisibility(View.VISIBLE);
-            mRatingBar.setRating((float) (voteAverage / (MAX_RATING / mRatingBar.getNumStars())));
+//            mRatingBar.setVisibility(View.VISIBLE);
+//            mRatingBar.setRating((float) (voteAverage / (MAX_RATING / mRatingBar.getNumStars())));
 
             int voteCount = cursor.getInt(COL_MOVIE_VOTE_COUNT);
-            mVoteCountTextView.setText("Vote Count: " + voteCount);
+            mVoteCountTextView.setText(String.valueOf(voteCount));
 
-            Double popularity = cursor.getDouble(COL_MOVIE_POPULARITY);
-            mPopularityTextView.setText("Popularity: " + popularity);
+//            Double popularity = cursor.getDouble(COL_MOVIE_POPULARITY);
+//            mPopularityTextView.setText("Popularity: " + popularity);
 
             if (!cursor.isNull(COL_MOVIE_RUNTIME)) {
 
                 int runtime = cursor.getInt(COL_MOVIE_RUNTIME);
-                mRuntimeTextView.setText("Runtime: " + runtime);
+                mRuntimeTextView.setText(getString(R.string.detail_runtime_format, runtime));
 
                 String status = cursor.getString(COL_MOVIE_STATUS);
-                mStatusTextView.setText("Status: " + status);
+                mStatusTextView.setText(status);
 
                 String tagline = cursor.getString(COL_MOVIE_TAGLINE);
-                mTaglineTextView.setText("Tagline: " + tagline);
+                mTaglineTextView.setText(tagline);
 
             } else {
                 fetchMovieDetail();
@@ -404,7 +403,7 @@ public class DetailActivityFragment extends Fragment
                     .into(mBackdropImage);
 
             String posterPath = cursor.getString(COL_MOVIE_POSTER_PATH);
-            String posterFullPath = Utility.getFullImagePath(getString(R.string.image_poster_w185), posterPath);
+            String posterFullPath = Utility.getFullImagePath(getString(R.string.image_poster_w342), posterPath);
             Picasso.with(getActivity())
                     .load(posterFullPath)
                     .into(mPosterImage);
