@@ -210,10 +210,10 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
             getContext().getContentResolver().bulkInsert(MovieDbContract.MovieEntry.CONTENT_URI, contentValues);
         }
 
-        for (ContentValues value : cVVector) {
-            int movieId = value.getAsInteger(MovieDbContract.MovieEntry._ID);
-            requestDetail(movieId);
-        }
+//        for (ContentValues value : cVVector) {
+//            int movieId = value.getAsInteger(MovieDbContract.MovieEntry._ID);
+//            requestDetail(movieId);
+//        }
 
     }
 
