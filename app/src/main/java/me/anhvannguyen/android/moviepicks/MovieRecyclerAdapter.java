@@ -90,7 +90,8 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
         // Set the date textview
         String releaseDate = mCursor.getString(MainActivityFragment.COL_MOVIE_RELEASE_DATE);
-        viewHolder.mReleaseDateTextView.setText(releaseDate);
+        String releaseYear = releaseDate.substring(0, 4);
+        viewHolder.mReleaseDateTextView.setText(releaseYear);
 
     }
 
