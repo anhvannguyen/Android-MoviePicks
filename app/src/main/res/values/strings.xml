@@ -21,6 +21,7 @@
     <!-- Menu Item Strings -->
     <string name="action_refresh">Refresh</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="action_test">Test</string>
 
     <!-- Preference Sort Order Strings -->
     <string name="pref_sortorder_key">sortorder_key</string>
@@ -38,11 +39,21 @@
     <string name="empty_listview">No Movie Information Available</string>
     <string name="empty_listview_network">No Movie Information Available.  No network connection detected.</string>
 
-    <!-- Test menu -->
-    <string name="action_test">Test</string>
-
     <!-- SyncAdapter related -->
     <string name="sync_account_type">android.anhvannguyen.me</string>
     <string name="content_authority">me.anhvannguyen.android.moviepicks</string>
+
+    <!-- Detail View String -->
+    <string name="detail_label">Movie Detail</string>
+    <string name="detail_score_label">Score:</string>
+    <string name="detail_count_label">Vote Count:</string>
+    <string name="detail_release_label">Release Date:</string>
+    <string name="detail_status_label">Status:</string>
+    <string name="detail_runtime_label">Runtime:</string>
+
+    <string name="detail_score_format">%1$.1f/10</string>
+    <string name="detail_runtime_format">%1$d Minutes</string>
+
+
 
 </resources>
