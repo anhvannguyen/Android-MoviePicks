@@ -84,15 +84,11 @@ public class DetailActivityFragment extends Fragment
     public static final int COL_TRAILER_NAME = 0;
     public static final int COL_TRAILER_KEY = 1;
 
-//    private TextView mIdTextView;
-//    private TextView mTitleTextView;
-//    private TextView mOriginalTitleTextView;
     private TextView mOverviewTextView;
     private TextView mReleaseDateTextView;
     private TextView mVoteAverageTextView;
 //    private RatingBar mRatingBar;
     private TextView mVoteCountTextView;
-//    private TextView mPopularityTextView;
     private ImageView mBackdropImage;
     private ImageView mPosterImage;
     private TextView mRuntimeTextView;
@@ -111,15 +107,11 @@ public class DetailActivityFragment extends Fragment
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-//        mIdTextView = (TextView) rootView.findViewById(R.id.detail_id_textview);
-//        mTitleTextView = (TextView) rootView.findViewById(R.id.detail_title_textview);
-//        mOriginalTitleTextView = (TextView) rootView.findViewById(R.id.detail_original_title_textview);
         mOverviewTextView = (TextView) rootView.findViewById(R.id.detail_overview_textview);
         mReleaseDateTextView = (TextView) rootView.findViewById(R.id.detail_release_date_textview);
         mVoteAverageTextView = (TextView) rootView.findViewById(R.id.detail_vote_average_textview);
 //        mRatingBar = (RatingBar) rootView.findViewById(R.id.detail_rating_bar);
         mVoteCountTextView = (TextView) rootView.findViewById(R.id.detail_vote_count_textview);
-//        mPopularityTextView = (TextView) rootView.findViewById(R.id.detail_popuarity_textview);
         mBackdropImage = (ImageView) rootView.findViewById(R.id.detail_backdrop_imageview);
         mPosterImage = (ImageView) rootView.findViewById(R.id.detail_poster_imageview);
         mRuntimeTextView = (TextView) rootView.findViewById(R.id.detail_runtime_textview);
@@ -354,12 +346,6 @@ public class DetailActivityFragment extends Fragment
 
             final float MAX_RATING = 10.0f;
 
-//            int id = cursor.getInt(COL_MOVIE_ID);
-//            mIdTextView.setText("ID: " + id);
-
-//            String title = cursor.getString(COL_MOVIE_TITLE);
-//            mTitleTextView.setText("Title: " + title);
-
             String originalTitle = cursor.getString(COL_MOVIE_ORIGINAL_TITLE);
 //            mOriginalTitleTextView.setText("Original Title: " + originalTitle);
 
@@ -407,27 +393,7 @@ public class DetailActivityFragment extends Fragment
             Picasso.with(getActivity())
                     .load(posterFullPath)
                     .into(mPosterImage);
-
-//            AppCompatActivity activity = (AppCompatActivity)getActivity();
-//            Toolbar toolbarView = (Toolbar) getView().findViewById(R.id.toolbar);
-
-            // We need to start the enter transition after the data has loaded
-//            if (activity instanceof DetailActivity) {
-//                activity.supportStartPostponedEnterTransition();
-//
-//                if (toolbarView != null) {
-//                    activity.setSupportActionBar(toolbarView);
-//
-//                    activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-//                    activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//                }
-//            } else {
-//                if (toolbarView != null) {
-//                    Menu menu = toolbarView.getMenu();
-//                    if (menu != null) menu.clear();
-//                    toolbarView.inflateMenu(R.menu.menu_detail_fragment);
-//                }
-//            }
+            
 
             mCollapsingToolbarLayout.setTitle(originalTitle);
             mCollapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));

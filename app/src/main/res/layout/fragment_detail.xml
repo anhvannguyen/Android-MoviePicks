@@ -47,11 +47,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
-                <!--xmlns:tools="http://schemas.android.com/tools"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--tools:context="me.anhvannguyen.android.moviepicks.DetailActivityFragment">-->
+        <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--xmlns:tools="http://schemas.android.com/tools"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--tools:context="me.anhvannguyen.android.moviepicks.DetailActivityFragment">-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,81 +62,35 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
 
-            <!--<TextView-->
-                <!--android:id="@+id/detail_id_textview"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/detail_title_textview"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
-
             <TextView
                 android:id="@+id/detail_tagline_textview"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/abc_list_item_padding_horizontal_material"
                 android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
-                android:layout_gravity="center"/>
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
 
             <ImageView
                 android:id="@+id/detail_poster_imageview"
-                android:layout_marginBottom="@dimen/abc_list_item_padding_horizontal_material"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
-
-            <!--<TextView-->
-                <!--android:id="@+id/detail_original_title_textview"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
-
-
-
-            <!--<TextView-->
-                <!--android:id="@+id/detail_release_date_textview"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/detail_vote_average_textview"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/abc_list_item_padding_horizontal_material"/>
 
             <!--<RatingBar-->
-                <!--android:id="@+id/detail_rating_bar"-->
-                <!--style="?android:attr/ratingBarStyleIndicator"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:isIndicator="true"-->
-                <!--android:numStars="5"-->
-                <!--android:stepSize="0.25"/>-->
+            <!--android:id="@+id/detail_rating_bar"-->
+            <!--style="?android:attr/ratingBarStyleIndicator"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:isIndicator="true"-->
+            <!--android:numStars="5"-->
+            <!--android:stepSize="0.25"/>-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/detail_vote_count_textview"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/detail_popuarity_textview"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/detail_runtime_textview"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/detail_status_textview"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"/>-->
-
-            <include layout="@layout/detail_info_grid"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"/>
+            <include
+                layout="@layout/detail_info_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -146,29 +100,29 @@
                 card_view:cardElevation="4dp"
                 card_view:cardUseCompatPadding="true">
 
-            <android.support.v7.widget.GridLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="8dp"
-                app:columnCount="1">
-
-            <TextView
-                android:layout_marginBottom="@dimen/abc_list_item_padding_horizontal_material"
-                android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
-                android:text="Overview"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                app:layout_columnSpan="1"
-                app:layout_gravity="center_horizontal"/>
-
-                <TextView
-                    android:id="@+id/detail_overview_textview"
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.GridLayout
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
-            </android.support.v7.widget.GridLayout>
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    app:columnCount="1">
+
+                    <TextView
+                        android:layout_marginBottom="@dimen/abc_list_item_padding_horizontal_material"
+                        android:layout_marginTop="@dimen/abc_list_item_padding_horizontal_material"
+                        android:text="Overview"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        app:layout_columnSpan="1"
+                        app:layout_gravity="center_horizontal"/>
+
+                    <TextView
+                        android:id="@+id/detail_overview_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
+                </android.support.v7.widget.GridLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
@@ -193,16 +147,16 @@
                         app:layout_columnSpan="1"
                         app:layout_gravity="center_horizontal"/>
 
-            <LinearLayout
-                android:id="@+id/trailer_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_gravity="center_horizontal"
-                android:orientation="vertical"/>
+                    <LinearLayout
+                        android:id="@+id/trailer_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_gravity="center_horizontal"/>
                 </android.support.v7.widget.GridLayout>
             </android.support.v7.widget.CardView>
 
         </LinearLayout>
-    <!--</ScrollView>-->
+        <!--</ScrollView>-->
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
