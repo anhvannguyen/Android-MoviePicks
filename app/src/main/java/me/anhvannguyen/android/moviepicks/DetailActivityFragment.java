@@ -364,9 +364,6 @@ public class DetailActivityFragment extends Fragment
             int voteCount = cursor.getInt(COL_MOVIE_VOTE_COUNT);
             mVoteCountTextView.setText(String.valueOf(voteCount));
 
-//            Double popularity = cursor.getDouble(COL_MOVIE_POPULARITY);
-//            mPopularityTextView.setText("Popularity: " + popularity);
-
             if (!cursor.isNull(COL_MOVIE_RUNTIME)) {
 
                 int runtime = cursor.getInt(COL_MOVIE_RUNTIME);
@@ -393,7 +390,7 @@ public class DetailActivityFragment extends Fragment
             Picasso.with(getActivity())
                     .load(posterFullPath)
                     .into(mPosterImage);
-            
+
 
             mCollapsingToolbarLayout.setTitle(originalTitle);
             mCollapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
