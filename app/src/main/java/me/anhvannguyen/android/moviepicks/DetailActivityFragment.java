@@ -393,7 +393,7 @@ public class DetailActivityFragment extends Fragment
 
 
             mCollapsingToolbarLayout.setTitle(originalTitle);
-            mCollapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+//            mCollapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         } else if (loader.getId() == MOVIE_TRAILER_LOADER) {
             if (cursor != null) {
