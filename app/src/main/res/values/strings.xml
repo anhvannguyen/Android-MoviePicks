@@ -51,9 +51,11 @@
     <string name="detail_status_label">Status:</string>
     <string name="detail_runtime_label">Runtime:</string>
 
+    <!-- Detail String format -->
     <string name="detail_score_format">%1$.1f/10</string>
     <string name="detail_runtime_format">%1$d Minutes</string>
 
-
+    <!-- List String format -->
+    <string name="list_rating_format">Rating: %1$.1f (%2$d)</string>
 
 </resources>

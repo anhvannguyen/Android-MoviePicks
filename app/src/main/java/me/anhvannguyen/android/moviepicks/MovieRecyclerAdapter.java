@@ -85,8 +85,8 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
         // Set the rating textview
         Double movieRating = mCursor.getDouble(MainActivityFragment.COL_MOVIE_VOTE_AVERAGE);
         int movieVoteCount = mCursor.getInt(MainActivityFragment.COL_MOVIE_VOTE_COUNT);
-        viewHolder.mRatingTextView.setText("Rating: " + movieRating +
-                " (" + movieVoteCount + ")");
+        viewHolder.mRatingTextView.setText(mContext.getString(
+                R.string.list_rating_format, movieRating, movieVoteCount));
 
         // Set the date textview
         String releaseDate = mCursor.getString(MainActivityFragment.COL_MOVIE_RELEASE_DATE);
