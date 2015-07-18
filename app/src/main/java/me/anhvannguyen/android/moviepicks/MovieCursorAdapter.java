@@ -11,9 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by anhvannguyen on 6/18/15.
- */
+
 public class MovieCursorAdapter extends CursorAdapter {
     private final String LOG_TAG = MovieCursorAdapter.class.getSimpleName();
 

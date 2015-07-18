@@ -5,9 +5,7 @@ import android.os.Parcelable;
 
 import java.util.Comparator;
 
-/**
- * Created by anhvannguyen on 6/12/15.
- */
+
 public class Movie implements Parcelable {
     public static final int SORT_POPULARITY = 1;
     public static final int SORT_VOTE_AVERAGE = 2;

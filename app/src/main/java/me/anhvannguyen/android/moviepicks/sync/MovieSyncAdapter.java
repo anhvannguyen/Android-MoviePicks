@@ -37,9 +37,6 @@ import me.anhvannguyen.android.moviepicks.Utility;
 import me.anhvannguyen.android.moviepicks.VolleySingleton;
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 
-/**
- * Created by anhvannguyen on 7/7/15.
- */
 public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
     private final String LOG_TAG = MovieSyncAdapter.class.getCanonicalName();
 

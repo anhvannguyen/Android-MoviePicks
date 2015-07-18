@@ -14,9 +14,6 @@ import java.util.List;
 
 import me.anhvannguyen.android.moviepicks.data.Movie;
 
-/**
- * Created by anhvannguyen on 6/12/15.
- */
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     private final String LOG_TAG = MovieArrayAdapter.class.getSimpleName();
 

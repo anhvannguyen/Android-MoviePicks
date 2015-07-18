@@ -5,9 +5,6 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
- * Created by anhvannguyen on 6/15/15.
- */
 public class MovieDbContract {
 
     // Content provider URI

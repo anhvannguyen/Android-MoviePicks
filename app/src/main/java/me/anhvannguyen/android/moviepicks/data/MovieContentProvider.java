@@ -7,9 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
-/**
- * Created by anhvannguyen on 6/16/15.
- */
 public class MovieContentProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private MovieDbHelper mOpenHelper;

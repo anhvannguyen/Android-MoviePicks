@@ -21,9 +21,6 @@ import java.util.Vector;
 
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 
-/**
- * Created by anhvannguyen on 6/19/15.
- */
 public class FetchMovieTrailerTask extends AsyncTask<String, Void, Void> {
     private final String LOG_TAG = FetchMovieTrailerTask.class.getSimpleName();
 

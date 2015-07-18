@@ -11,9 +11,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by anhvannguyen on 7/1/15.
- */
 public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdapter.ViewHolder> {
 
     private Cursor mCursor;

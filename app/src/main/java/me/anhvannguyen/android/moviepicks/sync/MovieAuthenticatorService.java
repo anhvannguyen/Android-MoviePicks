@@ -4,9 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-/**
- * Created by anhvannguyen on 7/7/15.
- */
 public class MovieAuthenticatorService extends Service {
     private MovieAccountAuthenticator mAuthenticator;
 

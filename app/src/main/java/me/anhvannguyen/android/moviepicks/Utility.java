@@ -19,9 +19,6 @@ import java.util.Vector;
 
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 
-/**
- * Created by anhvannguyen on 6/13/15.
- */
 public class Utility {
     public static final String MOVIE_API_KEY = MovieDbApiKey.getKey();
     public static final String MOVIE_API_PARAM = "api_key";
