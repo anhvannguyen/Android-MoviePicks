@@ -1,12 +1,9 @@
 package me.anhvannguyen.android.moviepicks.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.util.Comparator;
 
 
-public class Movie implements Parcelable {
+public class Movie {
     public static final int SORT_POPULARITY = 1;
     public static final int SORT_VOTE_AVERAGE = 2;
 
@@ -22,6 +19,10 @@ public class Movie implements Parcelable {
     private double mPopularity;
     private String mPosterPath;
     private String mBackdropPath;
+    private int mRuntime;
+    private String mStatus;
+    private String mTagline;
+
     private boolean mFavorite;
 
     public Movie(int id, String title, String originalTitle, String overview, String releaseDate,
@@ -40,54 +41,12 @@ public class Movie implements Parcelable {
 
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public Movie(int id, int runtime, String status, String tagline) {
+        mId = id;
+        mRuntime = runtime;
+        mStatus = status;
+        mTagline = tagline;
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mId);
-        dest.writeString(mTitle);
-        dest.writeString(mOriginalTitle);
-        dest.writeString(mOverview);
-        dest.writeString(mReleaseDate);
-        dest.writeDouble(mVoteAverage);
-        dest.writeInt(mVoteCount);
-        dest.writeDouble(mPopularity);
-        dest.writeString(mPosterPath);
-        dest.writeString(mBackdropPath);
-        dest.writeInt(mFavorite ? 1 : 0);  // boolean
-
-    }
-
-    // Used to recreate the object
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(Parcel source) {
-            return new Movie(source);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
-
-    public Movie(Parcel parcel) {
-        mId = parcel.readInt();
-        mTitle = parcel.readString();
-        mOriginalTitle = parcel.readString();
-        mOverview = parcel.readString();
-        mReleaseDate = parcel.readString();
-        mVoteAverage = parcel.readDouble();
-        mVoteCount = parcel.readInt();
-        mPopularity = parcel.readDouble();
-        mPosterPath = parcel.readString();
-        mBackdropPath = parcel.readString();
-        mFavorite = parcel.readInt() != 0;
-    }
-
 
 
     public int getId() {
@@ -178,6 +137,29 @@ public class Movie implements Parcelable {
         mFavorite = favorite;
     }
 
+    public int getRuntime() {
+        return mRuntime;
+    }
+
+    public void setRuntime(int runtime) {
+        mRuntime = runtime;
+    }
+
+    public String getStatus() {
+        return mStatus;
+    }
+
+    public void setStatus(String status) {
+        mStatus = status;
+    }
+
+    public String getTagline() {
+        return mTagline;
+    }
+
+    public void setTagline(String tagline) {
+        mTagline = tagline;
+    }
 
     public String getFullPosterPath(String size) {
         return MOVIE_IMAGE_BASE_URL + size + mPosterPath;
