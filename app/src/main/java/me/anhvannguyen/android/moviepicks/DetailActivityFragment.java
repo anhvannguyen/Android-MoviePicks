@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +32,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Vector;
 
+import me.anhvannguyen.android.moviepicks.data.Movie;
 import me.anhvannguyen.android.moviepicks.data.MovieDbContract;
 import me.anhvannguyen.android.moviepicks.data.Trailer;
 
@@ -376,7 +386,9 @@ public class DetailActivityFragment extends Fragment
                 mTaglineTextView.setText(tagline);
 
             } else {
-                fetchMovieDetail();
+//                fetchMovieDetail();
+                String movieId = MovieDbContract.MovieEntry.getMovieId(mUri);
+                new FetchDetailTask().execute(movieId);
             }
 
             String backdropPath = cursor.getString(COL_MOVIE_BACKDROP_PATH);
@@ -428,6 +440,142 @@ public class DetailActivityFragment extends Fragment
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         if (loader.getId() == MOVIE_TRAILER_LOADER) {
+        }
+    }
+
+    public class FetchDetailTask extends AsyncTask<String, Void, Movie> {
+        @Override
+        protected Movie doInBackground(String... params) {
+            if (params.length == 0) {
+                return null;
+            }
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader bufferedReader = null;
+
+            String movieDetailJsonStr = null;
+
+            try {
+                final String MOVIE_PATH = "movie";
+                final String MOVIE_ID = params[0];
+
+                // Build themoviedb.org URI
+                Uri movieUri = Uri.parse(Utility.MOVIE_BASE_URL)
+                        .buildUpon()
+                        .appendPath(MOVIE_PATH)
+                        .appendPath(MOVIE_ID)
+                        .appendQueryParameter(Utility.MOVIE_API_PARAM, Utility.MOVIE_API_KEY)
+                        .build();
+
+                URL url = new URL(movieUri.toString());
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+
+                if (responseCode != HttpURLConnection.HTTP_OK) {
+                    return null;
+                }
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                movieDetailJsonStr = buffer.toString();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null)
+                    urlConnection.disconnect();
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                return parseJson(movieDetailJsonStr);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        private Movie parseJson(String detailJsonStr) throws JSONException {
+            final String MDB_ID = "id";                 // int
+            final String MDB_RUNTIME = "runtime";       // int
+            final String MDB_HOMEPAGE = "homepage";     // String
+            final String MDB_STATUS = "status";         // String
+            final String MDB_TAGLINE = "tagline";       // String
+
+
+            Movie tempMovie = null;
+            try {
+                JSONObject response = new JSONObject(detailJsonStr);
+                int id = response.getInt(MDB_ID);
+                int runtime = response.getInt(MDB_RUNTIME);
+                String homepage = response.getString(MDB_HOMEPAGE);
+                String status = response.getString(MDB_STATUS);
+                String tagline = response.getString(MDB_TAGLINE);
+
+                // cache data
+                ContentValues value = new ContentValues();
+                value.put(MovieDbContract.MovieEntry.COLUMN_RUNTIME, runtime);
+                value.put(MovieDbContract.MovieEntry.COLUMN_HOMEPAGE, homepage);
+                value.put(MovieDbContract.MovieEntry.COLUMN_STATUS, status);
+                value.put(MovieDbContract.MovieEntry.COLUMN_TAGLINE, tagline);
+
+                getActivity().getContentResolver().update(
+                        MovieDbContract.MovieEntry.CONTENT_URI,
+                        value,
+                        MovieDbContract.MovieEntry._ID + " = ?",
+                        new String[]{String.valueOf(id)}
+                );
+
+
+                tempMovie = new Movie(id, runtime, status, tagline);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return tempMovie;
+        }
+
+        @Override
+        protected void onPostExecute(Movie movie) {
+//            super.onPostExecute(movie);
+            if (movie != null) {
+                mRuntimeTextView.setText(getString(R.string.detail_runtime_format, movie.getRuntime()));
+                mStatusTextView.setText(movie.getStatus());
+                mTaglineTextView.setText(movie.getTagline());
+            }
         }
     }
 }
